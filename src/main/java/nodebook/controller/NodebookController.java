@@ -1,4 +1,4 @@
-package nodebook;
+package nodebook.controller;
 
 import de.felixroske.jfxsupport.FXMLController;
 import javafx.fxml.FXML;
