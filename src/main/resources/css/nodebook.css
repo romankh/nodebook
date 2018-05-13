@@ -1,15 +1,14 @@
 .button, .toggle-button {
     -fx-background-position: center;
     -fx-background-repeat: no-repeat;
+    -fx-background-size: 24 24;
+    -fx-border-style: none;
 }
 
-.button.add-node { -fx-background-image: url(/images/savefile.png);}
-.button.add-subnode { -fx-background-image: url(/images/savefile.png);}
-.button.save { -fx-background-image: url(/images/savefile.png);}
-.button.bold { -fx-background-image: url(/images/savefile.png);}
-.button.italic { -fx-background-image: url(/images/savefile.png);}
-.button.underline { -fx-background-image: url(/images/savefile.png);}
-.button.strike-through { -fx-background-image: url(/images/savefile.png);}
-.button.header-1 { -fx-background-image: url(/images/savefile.png);}
-.button.header-2 { -fx-background-image: url(/images/savefile.png);}
-.button.header-3 { -fx-background-image: url(/images/savefile.png);}
+.button.add-node { -fx-background-image: url(/images/folder.png);}
+.button.add-subnode { -fx-background-image: url(/images/copy.png);}
+.button.save { -fx-background-image: url(/images/save.png);}
+.button.bold { -fx-background-image: url(/images/bold.png);}
+.button.italic { -fx-background-image: url(/images/italic.png);}
+.button.underline { -fx-background-image: url(/images/underline.png);}
+.button.strike-through { -fx-background-image: url(/images/strikethrough.png);}

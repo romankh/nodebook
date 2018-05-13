@@ -15,9 +15,9 @@ public class ToolBarComponent {
             "italic",
             "underline",
             "strike-through",
-            "header-1",
-            "header-2",
-            "header-3",
+//            "header-1",
+//            "header-2",
+//            "header-3",
     };
 
     public void addButtons(ToolBar toolBar) {
