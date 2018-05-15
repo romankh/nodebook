@@ -19,6 +19,9 @@ public class ToolBarComponent {
 //            "header-1",
 //            "header-2",
 //            "header-3",
+//            "small",
+//            "superscript",
+//            "subscript",
     };
 
     @Autowired
