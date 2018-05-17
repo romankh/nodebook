@@ -16,9 +16,9 @@ public class ToolBarComponent {
             "italic",
             "underline",
             "strikethrough",
-//            "header-1",
-//            "header-2",
-//            "header-3",
+            "header-1",
+            "header-2",
+            "header-3",
 //            "small",
 //            "superscript",
 //            "subscript",
@@ -29,7 +29,7 @@ public class ToolBarComponent {
 
     public void addButtons(ToolBar toolBar) {
         for (String button : buttons) {
-            toolBar.getItems().add(createButton(button, getAction(button), ""));
+            toolBar.getItems().add(createButton(button, getAction(button), button));
         }
     }
 
@@ -62,6 +62,12 @@ public class ToolBarComponent {
                 return richTextComponent::toggleUnderline;
             case "strikethrough":
                 return richTextComponent::toggleStrikethrough;
+            case "header-1":
+                return richTextComponent::toggleHeader1;
+            case "header-2":
+                return richTextComponent::toggleHeader2;
+            case "header-3":
+                return richTextComponent::toggleHeader3;
             default:
                 return richTextComponent::toggleBold;
         }

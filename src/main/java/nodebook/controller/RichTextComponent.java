@@ -75,6 +75,24 @@ public class RichTextComponent {
         updateStyleInSelection(mixinGetter);
     }
 
+    public void toggleHeader1() {
+        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans ->
+                TextStyle.header1(!spans.styleStream().allMatch(style -> style.header1.orElse(false)));
+        updateStyleInSelection(mixinGetter);
+    }
+
+    public void toggleHeader2() {
+        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans ->
+                TextStyle.header2(!spans.styleStream().allMatch(style -> style.header2.orElse(false)));
+        updateStyleInSelection(mixinGetter);
+    }
+
+    public void toggleHeader3() {
+        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans ->
+                TextStyle.header3(!spans.styleStream().allMatch(style -> style.header3.orElse(false)));
+        updateStyleInSelection(mixinGetter);
+    }
+
     private void updateStyleInSelection(Function<StyleSpans<TextStyle>, TextStyle> mixinGetter) {
         IndexRange selection = area.getSelection();
         if (selection.getLength() != 0) {

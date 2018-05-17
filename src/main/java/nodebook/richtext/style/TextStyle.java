@@ -3,6 +3,7 @@ package nodebook.richtext.style;
 import javafx.scene.paint.Color;
 import org.fxmisc.richtext.model.Codec;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +24,10 @@ public class TextStyle {
     public final Optional<String> fontFamily;
     public final Optional<Color> textColor;
     public final Optional<Color> backgroundColor;
+
+    public Optional<Boolean> header1 = Optional.of(false);
+    public Optional<Boolean> header2 = Optional.of(false);
+    public Optional<Boolean> header3 = Optional.of(false);
 
     public TextStyle() {
         this(
@@ -88,6 +93,18 @@ public class TextStyle {
         return EMPTY.updateBackgroundColor(color);
     }
 
+    public static TextStyle header1(boolean header1) {
+        return EMPTY.updateHeader1(header1);
+    }
+
+    public static TextStyle header2(boolean header2) {
+        return EMPTY.updateHeader2(header2);
+    }
+
+    public static TextStyle header3(boolean header3) {
+        return EMPTY.updateHeader3(header3);
+    }
+
     static String cssColor(Color color) {
         int red = (int) (color.getRed() * 255);
         int green = (int) (color.getGreen() * 255);
@@ -96,7 +113,7 @@ public class TextStyle {
     }
 
     public TextStyle updateWith(TextStyle mixin) {
-        return new TextStyle(
+        TextStyle newStyle = new TextStyle(
                 mixin.bold.isPresent() ? mixin.bold : bold,
                 mixin.italic.isPresent() ? mixin.italic : italic,
                 mixin.underline.isPresent() ? mixin.underline : underline,
@@ -105,6 +122,10 @@ public class TextStyle {
                 mixin.fontFamily.isPresent() ? mixin.fontFamily : fontFamily,
                 mixin.textColor.isPresent() ? mixin.textColor : textColor,
                 mixin.backgroundColor.isPresent() ? mixin.backgroundColor : backgroundColor);
+        newStyle.header1 = mixin.header1;
+        newStyle.header2 = mixin.header2;
+        newStyle.header3 = mixin.header3;
+        return newStyle;
     }
 
     public TextStyle updateBold(boolean bold) {
@@ -137,6 +158,33 @@ public class TextStyle {
 
     public TextStyle updateBackgroundColor(Color backgroundColor) {
         return new TextStyle(bold, italic, underline, strikethrough, fontSize, fontFamily, textColor, Optional.of(backgroundColor));
+    }
+
+    public TextStyle updateHeader1(boolean header1) {
+        Optional<Integer> newFontSize = header1 ? Optional.of(22) : Optional.of(12);
+        TextStyle newStyle = new TextStyle(Optional.of(header1), italic, underline, strikethrough, newFontSize, fontFamily, textColor, backgroundColor);
+        newStyle.header1 = Optional.of(header1);
+        newStyle.header2 = Optional.of(!header1);
+        newStyle.header3 = Optional.of(!header1);
+        return newStyle;
+    }
+
+    public TextStyle updateHeader2(boolean header2) {
+        Optional<Integer> newFontSize = header2 ? Optional.of(18) : Optional.of(12);
+        TextStyle newStyle = new TextStyle(Optional.of(header2), italic, underline, strikethrough, newFontSize, fontFamily, textColor, backgroundColor);
+        newStyle.header1 = Optional.of(!header2);
+        newStyle.header2 = Optional.of(header2);
+        newStyle.header3 = Optional.of(!header2);
+        return newStyle;
+    }
+
+    public TextStyle updateHeader3(boolean header3) {
+        Optional<Integer> newFontSize = header3 ? Optional.of(14) : Optional.of(12);
+        TextStyle newStyle = new TextStyle(Optional.of(header3), italic, underline, strikethrough, newFontSize, fontFamily, textColor, backgroundColor);
+        newStyle.header1 = Optional.of(!header3);
+        newStyle.header2 = Optional.of(!header3);
+        newStyle.header3 = Optional.of(header3);
+        return newStyle;
     }
 
     public String toCss() {
