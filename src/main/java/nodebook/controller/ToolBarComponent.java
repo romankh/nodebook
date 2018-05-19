@@ -3,6 +3,8 @@ package nodebook.controller;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +18,11 @@ public class ToolBarComponent {
             "italic",
             "underline",
             "strikethrough",
-            "header-1",
-            "header-2",
-            "header-3",
-//            "small",
-//            "superscript",
-//            "subscript",
+            "h1",
+            "h2",
+            "h3",
+            "bullet-list",
+            "numbered-list",
     };
 
     @Autowired
@@ -35,10 +36,8 @@ public class ToolBarComponent {
 
     private Button createButton(String styleClass, Runnable action, String toolTip) {
         Button button = new Button();
-
-        button.setPrefWidth(25);
-        button.setPrefHeight(25);
-
+        button.setPrefWidth(24);
+        button.setPrefHeight(24);
         button.getStyleClass().add(styleClass);
         button.setOnAction(evt -> {
             action.run();
