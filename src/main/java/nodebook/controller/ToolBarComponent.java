@@ -34,6 +34,10 @@ public class ToolBarComponent {
             Lists.newArrayList(
                     "bullet-list",
                     "numbered-list"
+            ),
+            Lists.newArrayList(
+                    "date",
+                    "datetime"
             )
     );
 
@@ -82,6 +86,10 @@ public class ToolBarComponent {
                 return richTextComponent::toggleHeader2;
             case "h3":
                 return richTextComponent::toggleHeader3;
+            case "date":
+                return richTextComponent::addDate;
+            case "datetime":
+                return richTextComponent::addDateTime;
             default:
                 return richTextComponent::toggleBold;
         }

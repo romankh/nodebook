@@ -20,6 +20,9 @@ import org.fxmisc.richtext.model.TextOps;
 import org.reactfx.util.Either;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -91,6 +94,18 @@ public class RichTextComponent {
         Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans ->
                 TextStyle.header3(!spans.styleStream().allMatch(style -> style.header3.orElse(false)));
         updateStyleInSelection(mixinGetter);
+    }
+
+    public void addDate() {
+        IndexRange selection = area.getSelection();
+        LocalDate date = LocalDate.now();
+        area.insertText(selection.getEnd(), "\n" + date.toString() + "\n");
+    }
+
+    public void addDateTime() {
+        IndexRange selection = area.getSelection();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        area.insertText(selection.getEnd(), "\n" + LocalDateTime.now().format(formatter) + "\n");
     }
 
     private void updateStyleInSelection(Function<StyleSpans<TextStyle>, TextStyle> mixinGetter) {
