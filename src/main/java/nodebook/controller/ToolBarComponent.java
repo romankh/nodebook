@@ -76,11 +76,11 @@ public class ToolBarComponent {
                 return richTextComponent::toggleUnderline;
             case "strikethrough":
                 return richTextComponent::toggleStrikethrough;
-            case "header-1":
+            case "h1":
                 return richTextComponent::toggleHeader1;
-            case "header-2":
+            case "h2":
                 return richTextComponent::toggleHeader2;
-            case "header-3":
+            case "h3":
                 return richTextComponent::toggleHeader3;
             default:
                 return richTextComponent::toggleBold;
