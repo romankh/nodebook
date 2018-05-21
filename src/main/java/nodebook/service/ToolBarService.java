@@ -1,4 +1,4 @@
-package nodebook.controller;
+package nodebook.service;
 
 import com.google.common.collect.Lists;
 import javafx.scene.control.Button;
@@ -6,12 +6,12 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
-public class ToolBarComponent {
+@Service
+public class ToolBarService {
     private final List<List<String>> buttons = Lists.newArrayList(
             Lists.newArrayList(
                     "add-node",
@@ -42,7 +42,7 @@ public class ToolBarComponent {
     );
 
     @Autowired
-    private RichTextComponent richTextComponent;
+    private RichTextService richTextService;
 
     public void addButtons(ToolBar toolBar) {
         for (List<String> buttonGroup : buttons) {
@@ -73,29 +73,29 @@ public class ToolBarComponent {
     private Runnable getAction(String button) {
         switch (button) {
             case "bold":
-                return richTextComponent::toggleBold;
+                return richTextService::toggleBold;
             case "italic":
-                return richTextComponent::toggleItalic;
+                return richTextService::toggleItalic;
             case "underline":
-                return richTextComponent::toggleUnderline;
+                return richTextService::toggleUnderline;
             case "strikethrough":
-                return richTextComponent::toggleStrikethrough;
+                return richTextService::toggleStrikethrough;
             case "h1":
-                return richTextComponent::toggleHeader1;
+                return richTextService::toggleHeader1;
             case "h2":
-                return richTextComponent::toggleHeader2;
+                return richTextService::toggleHeader2;
             case "h3":
-                return richTextComponent::toggleHeader3;
+                return richTextService::toggleHeader3;
             case "date":
-                return richTextComponent::addDate;
+                return richTextService::addDate;
             case "datetime":
-                return richTextComponent::addDateTime;
+                return richTextService::addDateTime;
             case "bullet-list":
-                return richTextComponent::toggleBulletList;
+                return richTextService::toggleBulletList;
             case "numbered-list":
-                return richTextComponent::toggleNumberedList;
+                return richTextService::toggleNumberedList;
             default:
-                return richTextComponent::toggleBold;
+                return richTextService::toggleBold;
         }
     }
 }

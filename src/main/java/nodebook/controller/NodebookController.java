@@ -6,6 +6,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
+import nodebook.service.NodeTreeService;
+import nodebook.service.RichTextService;
+import nodebook.service.ToolBarService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URL;
@@ -13,9 +16,9 @@ import java.util.ResourceBundle;
 
 @FXMLController
 public class NodebookController implements Initializable {
-    private final NodeTreeComponent nodeTreeComponent;
-    private final ToolBarComponent toolBarComponent;
-    private final RichTextComponent richTextComponent;
+    private final NodeTreeService nodeTreeService;
+    private final ToolBarService toolBarService;
+    private final RichTextService richTextService;
     @FXML
     private TreeView<String> nodeTreeView;
     @FXML
@@ -24,19 +27,19 @@ public class NodebookController implements Initializable {
     private AnchorPane richtextPane;
 
     @Autowired
-    public NodebookController(NodeTreeComponent nodeTreeComponent,
-                              ToolBarComponent toolBarComponent,
-                              RichTextComponent richTextComponent) {
-        this.nodeTreeComponent = nodeTreeComponent;
-        this.toolBarComponent = toolBarComponent;
-        this.richTextComponent = richTextComponent;
+    public NodebookController(NodeTreeService nodeTreeService,
+                              ToolBarService toolBarService,
+                              RichTextService richTextService) {
+        this.nodeTreeService = nodeTreeService;
+        this.toolBarService = toolBarService;
+        this.richTextService = richTextService;
     }
 
     @FXML
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        nodeTreeComponent.setTreeNodes(nodeTreeView);
-        toolBarComponent.addButtons(toolBar);
-        richTextComponent.initalize(richtextPane);
+        nodeTreeService.setTreeNodes(nodeTreeView);
+        toolBarService.addButtons(toolBar);
+        richTextService.initalize(richtextPane);
     }
 }

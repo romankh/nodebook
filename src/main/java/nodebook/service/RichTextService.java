@@ -1,4 +1,4 @@
-package nodebook.controller;
+package nodebook.service;
 
 import javafx.scene.Node;
 import javafx.scene.control.IndexRange;
@@ -20,7 +20,7 @@ import org.fxmisc.richtext.model.StyledSegment;
 import org.fxmisc.richtext.model.TextOps;
 import org.fxmisc.richtext.model.TwoDimensional;
 import org.reactfx.util.Either;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,8 +29,8 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-@Component
-public class RichTextComponent {
+@Service
+public class RichTextService {
     private final TextOps<String, TextStyle> styledTextOps = SegmentOps.styledTextOps();
     private final LinkedImageOps<TextStyle> linkedImageOps = new LinkedImageOps<>();
     private GenericStyledArea<ParStyle, Either<String, LinkedImage>, TextStyle> area = new GenericStyledArea<>(

@@ -1,13 +1,13 @@
-package nodebook.controller;
+package nodebook.service;
 
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class NodeTreeComponent {
+@Service
+public class NodeTreeService {
     public void setTreeNodes(TreeView<String> nodeTreeView) {
         TreeItem<String> rootItem = createTreeItem("Root", 0);
         rootItem.getChildren().add(createTreeItem("Test", 1));
