@@ -33,6 +33,7 @@ import java.util.function.Function;
 public class RichTextService {
     private final TextOps<String, TextStyle> styledTextOps = SegmentOps.styledTextOps();
     private final LinkedImageOps<TextStyle> linkedImageOps = new LinkedImageOps<>();
+    private final String SEPARATOR = "--------------------------------------------------------------------------------";
     private GenericStyledArea<ParStyle, Either<String, LinkedImage>, TextStyle> area = new GenericStyledArea<>(
             ParStyle.EMPTY,                                                 // default paragraph style
             (paragraph, style) -> paragraph.setStyle(style.toCss()),        // paragraph style setter
@@ -108,6 +109,11 @@ public class RichTextService {
         IndexRange selection = area.getSelection();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         area.insertText(selection.getEnd(), "\n" + LocalDateTime.now().format(formatter) + "\n");
+    }
+
+    public void addSeparator() {
+        IndexRange selection = area.getSelection();
+        area.insertText(selection.getEnd(), "\n" + SEPARATOR + "\n");
     }
 
     public void toggleBulletList() {

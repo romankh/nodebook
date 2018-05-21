@@ -37,7 +37,8 @@ public class ToolBarService {
             ),
             Lists.newArrayList(
                     "date",
-                    "datetime"
+                    "datetime",
+                    "separator"
             )
     );
 
@@ -90,6 +91,8 @@ public class ToolBarService {
                 return richTextService::addDate;
             case "datetime":
                 return richTextService::addDateTime;
+            case "separator":
+                return richTextService::addSeparator;
             case "bullet-list":
                 return richTextService::toggleBulletList;
             case "numbered-list":
