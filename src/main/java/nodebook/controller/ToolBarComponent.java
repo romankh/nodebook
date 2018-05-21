@@ -92,6 +92,8 @@ public class ToolBarComponent {
                 return richTextComponent::addDateTime;
             case "bullet-list":
                 return richTextComponent::toggleBulletList;
+            case "numbered-list":
+                return richTextComponent::toggleNumberedList;
             default:
                 return richTextComponent::toggleBold;
         }

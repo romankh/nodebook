@@ -31,6 +31,7 @@ public class ParCodec implements Codec<ParStyle> {
         return new ParStyle(
                 OPT_ALIGNMENT_CODEC.decode(is),
                 OPT_COLOR_CODEC.decode(is),
+                Optional.ofNullable(false),
                 Optional.ofNullable(false));
     }
 }

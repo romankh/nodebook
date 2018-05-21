@@ -129,6 +129,26 @@ public class RichTextComponent {
         }
     }
 
+    public void toggleNumberedList() {
+        IndexRange selection = area.getSelection();
+        if (selection.getLength() != 0) {
+            int startPar = area.offsetToPosition(selection.getStart(), TwoDimensional.Bias.Forward).getMajor();
+            int endPar = area.offsetToPosition(selection.getEnd(), TwoDimensional.Bias.Backward).getMajor();
+            int number = 0;
+            for (int i = startPar; i <= endPar; ++i) {
+                Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle> paragraph = area.getParagraph(i);
+                ParStyle parStyle = paragraph.getParagraphStyle();
+                parStyle = parStyle.updateWith(ParStyle.EMPTY.updateNumberedList(!parStyle.numberedList.orElse(false)));
+                if (parStyle.numberedList.isPresent() && parStyle.numberedList.get()) {
+                    area.insertText(i, 0, String.valueOf(++number) + ". ");
+                } else if (paragraph.substring(0, 3).startsWith(String.valueOf(++number) + ". ")) {
+                    area.replaceText(i, 0, i, 3, "");
+                }
+                area.setParagraphStyle(i, parStyle);
+            }
+        }
+    }
+
     private void updateStyleInSelection(Function<StyleSpans<TextStyle>, TextStyle> mixinGetter) {
         IndexRange selection = area.getSelection();
         if (selection.getLength() != 0) {

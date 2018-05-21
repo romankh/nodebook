@@ -19,15 +19,18 @@ public class ParStyle {
     public final Optional<TextAlignment> alignment;
     public final Optional<Color> backgroundColor;
     public final Optional<Boolean> bulletList;
+    public final Optional<Boolean> numberedList;
 
     public ParStyle() {
-        this(Optional.empty(), Optional.empty(), Optional.empty());
+        this(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
     }
 
-    public ParStyle(Optional<TextAlignment> alignment, Optional<Color> backgroundColor, Optional<Boolean> bulletList) {
+    public ParStyle(Optional<TextAlignment> alignment, Optional<Color> backgroundColor, Optional<Boolean> bulletList,
+                    Optional<Boolean> numberedList) {
         this.alignment = alignment;
         this.backgroundColor = backgroundColor;
         this.bulletList = bulletList;
+        this.numberedList = numberedList;
     }
 
     public static ParStyle alignLeft() {
@@ -89,19 +92,24 @@ public class ParStyle {
         return new ParStyle(
                 mixin.alignment.isPresent() ? mixin.alignment : alignment,
                 mixin.backgroundColor.isPresent() ? mixin.backgroundColor : backgroundColor,
-                mixin.bulletList.isPresent() ? mixin.bulletList : bulletList);
+                mixin.bulletList.isPresent() ? mixin.bulletList : bulletList,
+                mixin.numberedList.isPresent() ? mixin.numberedList : numberedList);
     }
 
     public ParStyle updateAlignment(TextAlignment alignment) {
-        return new ParStyle(Optional.of(alignment), backgroundColor, bulletList);
+        return new ParStyle(Optional.of(alignment), backgroundColor, bulletList, numberedList);
     }
 
     public ParStyle updateBackgroundColor(Color backgroundColor) {
-        return new ParStyle(alignment, Optional.of(backgroundColor), bulletList);
+        return new ParStyle(alignment, Optional.of(backgroundColor), bulletList, numberedList);
     }
 
     public ParStyle updateBulletList(Boolean bulletList) {
-        return new ParStyle(alignment, backgroundColor, Optional.of(bulletList));
+        return new ParStyle(alignment, backgroundColor, Optional.of(bulletList), numberedList);
+    }
+
+    public ParStyle updateNumberedList(Boolean numberedList) {
+        return new ParStyle(alignment, backgroundColor, bulletList, Optional.of(numberedList));
     }
 
     @Override
