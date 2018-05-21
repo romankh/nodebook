@@ -13,10 +13,12 @@ import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyledTextArea;
 import org.fxmisc.richtext.TextExt;
 import org.fxmisc.richtext.model.Codec;
+import org.fxmisc.richtext.model.Paragraph;
 import org.fxmisc.richtext.model.SegmentOps;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyledSegment;
 import org.fxmisc.richtext.model.TextOps;
+import org.fxmisc.richtext.model.TwoDimensional;
 import org.reactfx.util.Either;
 import org.springframework.stereotype.Component;
 
@@ -106,6 +108,25 @@ public class RichTextComponent {
         IndexRange selection = area.getSelection();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         area.insertText(selection.getEnd(), "\n" + LocalDateTime.now().format(formatter) + "\n");
+    }
+
+    public void toggleBulletList() {
+        IndexRange selection = area.getSelection();
+        if (selection.getLength() != 0) {
+            int startPar = area.offsetToPosition(selection.getStart(), TwoDimensional.Bias.Forward).getMajor();
+            int endPar = area.offsetToPosition(selection.getEnd(), TwoDimensional.Bias.Backward).getMajor();
+            for (int i = startPar; i <= endPar; ++i) {
+                Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle> paragraph = area.getParagraph(i);
+                ParStyle parStyle = paragraph.getParagraphStyle();
+                parStyle = parStyle.updateWith(ParStyle.EMPTY.updateBulletList(!parStyle.bulletList.orElse(false)));
+                if (parStyle.bulletList.isPresent() && parStyle.bulletList.get()) {
+                    area.insertText(i, 0, "• ");
+                } else if (paragraph.substring(0, 2).startsWith("• ")) {
+                    area.replaceText(i, 0, i, 2, "");
+                }
+                area.setParagraphStyle(i, parStyle);
+            }
+        }
     }
 
     private void updateStyleInSelection(Function<StyleSpans<TextStyle>, TextStyle> mixinGetter) {
