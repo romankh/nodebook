@@ -39,6 +39,9 @@ public class ToolBarService {
                     "date",
                     "datetime",
                     "separator"
+            ),
+            Lists.newArrayList(
+                    "clear-format"
             )
     );
 
@@ -97,6 +100,8 @@ public class ToolBarService {
                 return richTextService::toggleBulletList;
             case "numbered-list":
                 return richTextService::toggleNumberedList;
+            case "clear-format":
+                return richTextService::clearFormat;
             default:
                 return richTextService::toggleBold;
         }

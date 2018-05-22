@@ -27,6 +27,7 @@
 .button.date { -fx-graphic: url(/images/date.png);}
 .button.datetime { -fx-graphic: url(/images/datetime.png);}
 .button.separator { -fx-graphic: url(/images/separator.png);}
+.button.clear-format { -fx-graphic: url(/images/clear-format.png);}
 
 .virtual-flow {
     -fx-background-color: linear-gradient(from 0px 0px to 20px 0px, gainsboro, gainsboro 99%, white);

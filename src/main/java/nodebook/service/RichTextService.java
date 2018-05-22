@@ -155,6 +155,23 @@ public class RichTextService {
         }
     }
 
+    public void clearFormat() {
+        IndexRange selection = area.getSelection();
+        if (selection.getLength() != 0) {
+
+            TextStyle initial = area.getInitialTextStyle();
+            area.setStyle(selection.getStart(), selection.getEnd(), initial);
+
+            int startPar = area.offsetToPosition(selection.getStart(), TwoDimensional.Bias.Forward).getMajor();
+            int endPar = area.offsetToPosition(selection.getEnd(), TwoDimensional.Bias.Backward).getMajor();
+
+            for (int i = startPar; i < endPar; i++) {
+                area.setParagraphStyle(i, area.getInitialParagraphStyle());
+            }
+            area.requestFocus();
+        }
+    }
+
     private void updateStyleInSelection(Function<StyleSpans<TextStyle>, TextStyle> mixinGetter) {
         IndexRange selection = area.getSelection();
         if (selection.getLength() != 0) {
