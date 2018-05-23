@@ -3,7 +3,6 @@ package nodebook.richtext.style;
 import javafx.scene.paint.Color;
 import org.fxmisc.richtext.model.Codec;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +21,7 @@ public class TextStyle {
     public final Optional<Boolean> strikethrough;
     public final Optional<Integer> fontSize;
     public final Optional<String> fontFamily;
-    public final Optional<Color> textColor;
+    public final Optional<Color> fontColor;
     public final Optional<Color> backgroundColor;
 
     public Optional<Boolean> header1 = Optional.of(false);
@@ -49,7 +48,7 @@ public class TextStyle {
             Optional<Boolean> strikethrough,
             Optional<Integer> fontSize,
             Optional<String> fontFamily,
-            Optional<Color> textColor,
+            Optional<Color> fontColor,
             Optional<Color> backgroundColor) {
         this.bold = bold;
         this.italic = italic;
@@ -57,7 +56,7 @@ public class TextStyle {
         this.strikethrough = strikethrough;
         this.fontSize = fontSize;
         this.fontFamily = fontFamily;
-        this.textColor = textColor;
+        this.fontColor = fontColor;
         this.backgroundColor = backgroundColor;
     }
 
@@ -85,8 +84,8 @@ public class TextStyle {
         return EMPTY.updateFontFamily(family);
     }
 
-    public static TextStyle textColor(Color color) {
-        return EMPTY.updateTextColor(color);
+    public static TextStyle fontColor(Color color) {
+        return EMPTY.updateFontColor(color);
     }
 
     public static TextStyle backgroundColor(Color color) {
@@ -120,7 +119,7 @@ public class TextStyle {
                 mixin.strikethrough.isPresent() ? mixin.strikethrough : strikethrough,
                 mixin.fontSize.isPresent() ? mixin.fontSize : fontSize,
                 mixin.fontFamily.isPresent() ? mixin.fontFamily : fontFamily,
-                mixin.textColor.isPresent() ? mixin.textColor : textColor,
+                mixin.fontColor.isPresent() ? mixin.fontColor : fontColor,
                 mixin.backgroundColor.isPresent() ? mixin.backgroundColor : backgroundColor);
         newStyle.header1 = mixin.header1;
         newStyle.header2 = mixin.header2;
@@ -129,40 +128,40 @@ public class TextStyle {
     }
 
     public TextStyle updateBold(boolean bold) {
-        return new TextStyle(Optional.of(bold), italic, underline, strikethrough, fontSize, fontFamily, textColor, backgroundColor);
+        return new TextStyle(Optional.of(bold), italic, underline, strikethrough, fontSize, fontFamily, fontColor, backgroundColor);
     }
 
     public TextStyle updateItalic(boolean italic) {
-        return new TextStyle(bold, Optional.of(italic), underline, strikethrough, fontSize, fontFamily, textColor, backgroundColor);
+        return new TextStyle(bold, Optional.of(italic), underline, strikethrough, fontSize, fontFamily, fontColor, backgroundColor);
     }
 
     public TextStyle updateUnderline(boolean underline) {
-        return new TextStyle(bold, italic, Optional.of(underline), strikethrough, fontSize, fontFamily, textColor, backgroundColor);
+        return new TextStyle(bold, italic, Optional.of(underline), strikethrough, fontSize, fontFamily, fontColor, backgroundColor);
     }
 
     public TextStyle updateStrikethrough(boolean strikethrough) {
-        return new TextStyle(bold, italic, underline, Optional.of(strikethrough), fontSize, fontFamily, textColor, backgroundColor);
+        return new TextStyle(bold, italic, underline, Optional.of(strikethrough), fontSize, fontFamily, fontColor, backgroundColor);
     }
 
     public TextStyle updateFontSize(int fontSize) {
-        return new TextStyle(bold, italic, underline, strikethrough, Optional.of(fontSize), fontFamily, textColor, backgroundColor);
+        return new TextStyle(bold, italic, underline, strikethrough, Optional.of(fontSize), fontFamily, fontColor, backgroundColor);
     }
 
     public TextStyle updateFontFamily(String fontFamily) {
-        return new TextStyle(bold, italic, underline, strikethrough, fontSize, Optional.of(fontFamily), textColor, backgroundColor);
+        return new TextStyle(bold, italic, underline, strikethrough, fontSize, Optional.of(fontFamily), fontColor, backgroundColor);
     }
 
-    public TextStyle updateTextColor(Color textColor) {
+    public TextStyle updateFontColor(Color textColor) {
         return new TextStyle(bold, italic, underline, strikethrough, fontSize, fontFamily, Optional.of(textColor), backgroundColor);
     }
 
     public TextStyle updateBackgroundColor(Color backgroundColor) {
-        return new TextStyle(bold, italic, underline, strikethrough, fontSize, fontFamily, textColor, Optional.of(backgroundColor));
+        return new TextStyle(bold, italic, underline, strikethrough, fontSize, fontFamily, fontColor, Optional.of(backgroundColor));
     }
 
     public TextStyle updateHeader1(boolean header1) {
         Optional<Integer> newFontSize = header1 ? Optional.of(22) : Optional.of(12);
-        TextStyle newStyle = new TextStyle(Optional.of(header1), italic, underline, strikethrough, newFontSize, fontFamily, textColor, backgroundColor);
+        TextStyle newStyle = new TextStyle(Optional.of(header1), italic, underline, strikethrough, newFontSize, fontFamily, fontColor, backgroundColor);
         newStyle.header1 = Optional.of(header1);
         newStyle.header2 = Optional.of(!header1);
         newStyle.header3 = Optional.of(!header1);
@@ -171,7 +170,7 @@ public class TextStyle {
 
     public TextStyle updateHeader2(boolean header2) {
         Optional<Integer> newFontSize = header2 ? Optional.of(18) : Optional.of(12);
-        TextStyle newStyle = new TextStyle(Optional.of(header2), italic, underline, strikethrough, newFontSize, fontFamily, textColor, backgroundColor);
+        TextStyle newStyle = new TextStyle(Optional.of(header2), italic, underline, strikethrough, newFontSize, fontFamily, fontColor, backgroundColor);
         newStyle.header1 = Optional.of(!header2);
         newStyle.header2 = Optional.of(header2);
         newStyle.header3 = Optional.of(!header2);
@@ -180,7 +179,7 @@ public class TextStyle {
 
     public TextStyle updateHeader3(boolean header3) {
         Optional<Integer> newFontSize = header3 ? Optional.of(14) : Optional.of(12);
-        TextStyle newStyle = new TextStyle(Optional.of(header3), italic, underline, strikethrough, newFontSize, fontFamily, textColor, backgroundColor);
+        TextStyle newStyle = new TextStyle(Optional.of(header3), italic, underline, strikethrough, newFontSize, fontFamily, fontColor, backgroundColor);
         newStyle.header1 = Optional.of(!header3);
         newStyle.header2 = Optional.of(!header3);
         newStyle.header3 = Optional.of(header3);
@@ -225,8 +224,8 @@ public class TextStyle {
         fontSize.ifPresent(integer -> sb.append("-fx-font-size: ").append(integer).append("pt;"));
         fontFamily.ifPresent(s -> sb.append("-fx-font-family: ").append(s).append(";"));
 
-        if (textColor.isPresent()) {
-            Color color = textColor.get();
+        if (fontColor.isPresent()) {
+            Color color = fontColor.get();
             sb.append("-fx-fill: ").append(cssColor(color)).append(";");
         }
 
@@ -248,7 +247,7 @@ public class TextStyle {
                     Objects.equals(this.strikethrough, that.strikethrough) &&
                     Objects.equals(this.fontSize, that.fontSize) &&
                     Objects.equals(this.fontFamily, that.fontFamily) &&
-                    Objects.equals(this.textColor, that.textColor) &&
+                    Objects.equals(this.fontColor, that.fontColor) &&
                     Objects.equals(this.backgroundColor, that.backgroundColor);
         } else {
             return false;
@@ -259,7 +258,7 @@ public class TextStyle {
     public int hashCode() {
         return Objects.hash(
                 bold, italic, underline, strikethrough,
-                fontSize, fontFamily, textColor, backgroundColor);
+                fontSize, fontFamily, fontColor, backgroundColor);
     }
 
     @Override
@@ -272,7 +271,7 @@ public class TextStyle {
         strikethrough.ifPresent(s -> styles.add(s.toString()));
         fontSize.ifPresent(s -> styles.add(s.toString()));
         fontFamily.ifPresent(f -> styles.add(f));
-        textColor.ifPresent(c -> styles.add(c.toString()));
+        fontColor.ifPresent(c -> styles.add(c.toString()));
         backgroundColor.ifPresent(b -> styles.add(b.toString()));
 
         return String.join(",", styles);

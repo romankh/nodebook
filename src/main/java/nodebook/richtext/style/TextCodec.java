@@ -24,7 +24,7 @@ public class TextCodec implements Codec<TextStyle> {
         os.writeByte(encodeBoldItalicUnderlineStrikethrough(s));
         os.writeInt(encodeOptionalUint(s.fontSize));
         OPT_STRING_CODEC.encode(os, s.fontFamily);
-        OPT_COLOR_CODEC.encode(os, s.textColor);
+        OPT_COLOR_CODEC.encode(os, s.fontColor);
         OPT_COLOR_CODEC.encode(os, s.backgroundColor);
     }
 

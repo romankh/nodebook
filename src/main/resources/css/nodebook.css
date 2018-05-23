@@ -3,6 +3,7 @@
     -fx-padding: 4px;
     -fx-background-color: transparent;
 }
+
 .button:hover, .toggle-button:hover {
     -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
     -fx-background-insets: 0 0 0 -2, 0, 1, 1;
@@ -12,22 +13,81 @@
     -fx-content-display: left;
 }
 
-.button.add-node { -fx-graphic: url(/images/add-node.png);}
-.button.add-subnode { -fx-graphic: url(/images/add-subnode.png);}
-.button.save { -fx-graphic: url(/images/save.png);}
-.button.bold { -fx-graphic: url(/images/bold.png);}
-.button.italic { -fx-graphic: url(/images/italic.png);}
-.button.underline { -fx-graphic: url(/images/underline.png);}
-.button.strikethrough { -fx-graphic: url(/images/strikethrough.png);}
-.button.h1 { -fx-graphic: url(/images/h1.png);}
-.button.h2 { -fx-graphic: url(/images/h2.png);}
-.button.h3 { -fx-graphic: url(/images/h3.png);}
-.button.bullet-list { -fx-graphic: url(/images/bullet-list.png);}
-.button.numbered-list { -fx-graphic: url(/images/numbered-list.png);}
-.button.date { -fx-graphic: url(/images/date.png);}
-.button.datetime { -fx-graphic: url(/images/datetime.png);}
-.button.separator { -fx-graphic: url(/images/separator.png);}
-.button.clear-format { -fx-graphic: url(/images/clear-format.png);}
+.button.add-node {
+    -fx-graphic: url(/images/add-node.png);
+}
+
+.button.add-subnode {
+    -fx-graphic: url(/images/add-subnode.png);
+}
+
+.button.save {
+    -fx-graphic: url(/images/save.png);
+}
+
+.button.font-color {
+    -fx-graphic: url(/images/font-color.png);
+}
+
+.button.font-highlight {
+    -fx-graphic: url(/images/font-highlight.png);
+}
+
+.button.bold {
+    -fx-graphic: url(/images/bold.png);
+}
+
+.button.italic {
+    -fx-graphic: url(/images/italic.png);
+}
+
+.button.underline {
+    -fx-graphic: url(/images/underline.png);
+}
+
+.button.strikethrough {
+    -fx-graphic: url(/images/strikethrough.png);
+}
+
+.button.h1 {
+    -fx-graphic: url(/images/h1.png);
+}
+
+.button.h2 {
+    -fx-graphic: url(/images/h2.png);
+}
+
+.button.h3 {
+    -fx-graphic: url(/images/h3.png);
+}
+
+.button.bullet-list {
+    -fx-graphic: url(/images/bullet-list.png);
+}
+
+.button.numbered-list {
+    -fx-graphic: url(/images/numbered-list.png);
+}
+
+.button.date {
+    -fx-graphic: url(/images/date.png);
+}
+
+.button.datetime {
+    -fx-graphic: url(/images/datetime.png);
+}
+
+.button.separator {
+    -fx-graphic: url(/images/separator.png);
+}
+
+.button.clear-format {
+    -fx-graphic: url(/images/clear-format.png);
+}
+
+.popover.color-selector .title, .popover.color-selector .content {
+    -fx-background-color: whitesmoke
+}
 
 .virtual-flow {
     -fx-background-color: linear-gradient(from 0px 0px to 20px 0px, gainsboro, gainsboro 99%, white);

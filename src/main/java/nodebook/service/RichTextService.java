@@ -37,7 +37,7 @@ public class RichTextService {
     private GenericStyledArea<ParStyle, Either<String, LinkedImage>, TextStyle> area = new GenericStyledArea<>(
             ParStyle.EMPTY,                                                 // default paragraph style
             (paragraph, style) -> paragraph.setStyle(style.toCss()),        // paragraph style setter
-            TextStyle.EMPTY.updateFontSize(12).updateFontFamily("Serif").updateTextColor(Color.BLACK),  // default segment style
+            TextStyle.EMPTY.updateFontSize(12).updateFontFamily("Serif").updateFontColor(Color.BLACK),  // default segment style
             styledTextOps._or(linkedImageOps, (s1, s2) -> Optional.empty()),                            // segment operations
             seg -> createNode(seg, (text, style) -> text.setStyle(style.toCss())));                     // Node creator and segment style setter
 
@@ -170,6 +170,16 @@ public class RichTextService {
             }
             area.requestFocus();
         }
+    }
+
+    public void setFontColor(Color color) {
+        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans -> TextStyle.fontColor(color);
+        updateStyleInSelection(mixinGetter);
+    }
+
+    public void setBackgroundColor(Color color) {
+        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans -> TextStyle.backgroundColor(color);
+        updateStyleInSelection(mixinGetter);
     }
 
     private void updateStyleInSelection(Function<StyleSpans<TextStyle>, TextStyle> mixinGetter) {

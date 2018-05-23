@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
+import nodebook.ui.ColorSelectionPopOver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,10 @@ public class ToolBarService {
             ),
             Lists.newArrayList(
                     "save"
+            ),
+            Lists.newArrayList(
+                    "font-color",
+                    "font-highlight"
             ),
             Lists.newArrayList(
                     "bold",
@@ -44,17 +49,32 @@ public class ToolBarService {
                     "clear-format"
             )
     );
-
+    private ToolBar toolBar;
+    private Button fontColorButton;
+    private Button fontBackgroundButton;
     @Autowired
     private RichTextService richTextService;
+    private ColorSelectionPopOver fontColorPopOver;
+    private ColorSelectionPopOver fontBackgroundPopOver;
 
-    public void addButtons(ToolBar toolBar) {
+    public void init(ToolBar toolBar) {
+        this.toolBar = toolBar;
         for (List<String> buttonGroup : buttons) {
             for (String button : buttonGroup) {
                 toolBar.getItems().add(createButton(button, getAction(button), button));
             }
             toolBar.getItems().add(new Separator());
         }
+
+        this.fontColorPopOver = new ColorSelectionPopOver("Select Font Color");
+        this.fontColorPopOver.setOnAction(evt -> {
+            richTextService.setFontColor(fontColorPopOver.getSelectedColor());
+        });
+
+        this.fontBackgroundPopOver = new ColorSelectionPopOver("Select Highlight Color");
+        this.fontBackgroundPopOver.setOnAction(evt -> {
+            richTextService.setBackgroundColor(fontBackgroundPopOver.getSelectedColor());
+        });
     }
 
     private Button createButton(String styleClass, Runnable action, String toolTip) {
@@ -69,6 +89,12 @@ public class ToolBarService {
 
         if (toolTip != null) {
             button.setTooltip(new Tooltip(toolTip));
+        }
+
+        if (styleClass.equals("font-color")) {
+            this.fontColorButton = button;
+        } else if (styleClass.equals("font-highlight")) {
+            this.fontBackgroundButton = button;
         }
 
         return button;
@@ -102,8 +128,20 @@ public class ToolBarService {
                 return richTextService::toggleNumberedList;
             case "clear-format":
                 return richTextService::clearFormat;
+            case "font-color":
+                return this::showFontColorPopOver;
+            case "font-highlight":
+                return this::showFontBackgroundPopOver;
             default:
                 return richTextService::toggleBold;
         }
+    }
+
+    private void showFontColorPopOver() {
+        fontColorPopOver.show(fontColorButton);
+    }
+
+    private void showFontBackgroundPopOver() {
+        fontBackgroundPopOver.show(fontBackgroundButton);
     }
 }

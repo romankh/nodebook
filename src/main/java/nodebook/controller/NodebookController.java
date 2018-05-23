@@ -39,7 +39,7 @@ public class NodebookController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         nodeTreeService.setTreeNodes(nodeTreeView);
-        toolBarService.addButtons(toolBar);
+        toolBarService.init(toolBar);
         richTextService.initalize(richtextPane);
     }
 }
