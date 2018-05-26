@@ -1,0 +1,10 @@
+app:
+  version: @project.version@
+javafx:
+  title: Nodepad ${app.version}
+  appicons:
+    - /icons/app_16x16.png
+    - /icons/app_24x24.png
+    - /icons/app_36x36.png
+    - /icons/app_42x42.png
+    - /icons/app_64x64.png
