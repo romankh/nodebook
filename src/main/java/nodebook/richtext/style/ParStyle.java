@@ -2,134 +2,117 @@ package nodebook.richtext.style;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
-import org.fxmisc.richtext.model.Codec;
-
-import java.util.Objects;
-import java.util.Optional;
-
-import static javafx.scene.text.TextAlignment.*;
 
 /**
  * Holds information about the style of a paragraph.
  */
 public class ParStyle {
+    private final TextAlignment alignment;
+    private final Color backgroundColor;
+    private final boolean bulletList;
+    private final boolean numberedList;
 
-    public static final ParStyle EMPTY = new ParStyle();
-    public static final Codec<ParStyle> CODEC = new ParCodec();
-    public final Optional<TextAlignment> alignment;
-    public final Optional<Color> backgroundColor;
-    public final Optional<Boolean> bulletList;
-    public final Optional<Boolean> numberedList;
-
-    public ParStyle() {
-        this(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+    public ParStyle(StyleBuilder styleBuilder) {
+        this.alignment = styleBuilder.alignment;
+        this.backgroundColor = styleBuilder.backgroundColor;
+        this.bulletList = styleBuilder.bulletList;
+        this.numberedList = styleBuilder.numberedList;
     }
 
-    public ParStyle(Optional<TextAlignment> alignment, Optional<Color> backgroundColor, Optional<Boolean> bulletList,
-                    Optional<Boolean> numberedList) {
-        this.alignment = alignment;
-        this.backgroundColor = backgroundColor;
-        this.bulletList = bulletList;
-        this.numberedList = numberedList;
+    public static ParStyle.StyleBuilder builder() {
+        return new ParStyle.StyleBuilder();
     }
 
-    public static ParStyle alignLeft() {
-        return EMPTY.updateAlignment(LEFT);
+    public static ParStyle.StyleBuilder builder(ParStyle parStyle) {
+        return new ParStyle.StyleBuilder(parStyle);
     }
 
-    public static ParStyle alignCenter() {
-        return EMPTY.updateAlignment(CENTER);
+    public TextAlignment getAlignment() {
+        return alignment;
     }
 
-    public static ParStyle bulletList() {
-        return EMPTY.updateBulletList(true);
+    public Color getBackgroundColor() {
+        return backgroundColor;
     }
 
-    public static ParStyle alignRight() {
-        return EMPTY.updateAlignment(RIGHT);
+    public boolean isBulletList() {
+        return bulletList;
     }
 
-    public static ParStyle alignJustify() {
-        return EMPTY.updateAlignment(JUSTIFY);
+    public boolean isNumberedList() {
+        return numberedList;
     }
 
-    public static ParStyle backgroundColor(Color color) {
-        return EMPTY.updateBackgroundColor(color);
-    }
 
     public String toCss() {
         StringBuilder sb = new StringBuilder();
 
-        alignment.ifPresent(al -> {
-            String cssAlignment;
-            switch (al) {
-                case LEFT:
-                    cssAlignment = "left";
-                    break;
-                case CENTER:
-                    cssAlignment = "center";
-                    break;
-                case RIGHT:
-                    cssAlignment = "right";
-                    break;
-                case JUSTIFY:
-                    cssAlignment = "justify";
-                    break;
-                default:
-                    throw new AssertionError("unreachable code");
-            }
-            sb.append("-fx-text-alignment: " + cssAlignment + ";");
-        });
+        String cssAlignment;
+        switch (getAlignment()) {
+            case LEFT:
+                cssAlignment = "left";
+                break;
+            case CENTER:
+                cssAlignment = "center";
+                break;
+            case RIGHT:
+                cssAlignment = "right";
+                break;
+            case JUSTIFY:
+                cssAlignment = "justify";
+                break;
+            default:
+                cssAlignment = "left";
+                break;
+        }
+        sb.append("-fx-text-alignment: ").append(cssAlignment).append(";");
 
-        backgroundColor.ifPresent(color -> {
-            sb.append("-fx-background-color: " + TextStyle.cssColor(color) + ";");
-        });
+        if (backgroundColor != null) {
+            sb.append("-fx-background-color: ").append(StyleUtil.cssColor(getBackgroundColor())).append(";");
+        }
 
         return sb.toString();
     }
 
-    public ParStyle updateWith(ParStyle mixin) {
-        return new ParStyle(
-                mixin.alignment.isPresent() ? mixin.alignment : alignment,
-                mixin.backgroundColor.isPresent() ? mixin.backgroundColor : backgroundColor,
-                mixin.bulletList.isPresent() ? mixin.bulletList : bulletList,
-                mixin.numberedList.isPresent() ? mixin.numberedList : numberedList);
-    }
+    public static class StyleBuilder {
+        private TextAlignment alignment;
+        private Color backgroundColor;
+        private boolean bulletList;
+        private boolean numberedList;
 
-    public ParStyle updateAlignment(TextAlignment alignment) {
-        return new ParStyle(Optional.of(alignment), backgroundColor, bulletList, numberedList);
-    }
-
-    public ParStyle updateBackgroundColor(Color backgroundColor) {
-        return new ParStyle(alignment, Optional.of(backgroundColor), bulletList, numberedList);
-    }
-
-    public ParStyle updateBulletList(Boolean bulletList) {
-        return new ParStyle(alignment, backgroundColor, Optional.of(bulletList), numberedList);
-    }
-
-    public ParStyle updateNumberedList(Boolean numberedList) {
-        return new ParStyle(alignment, backgroundColor, bulletList, Optional.of(numberedList));
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof ParStyle) {
-            ParStyle that = (ParStyle) other;
-            return Objects.equals(this.alignment, that.alignment) &&
-                    Objects.equals(this.backgroundColor, that.backgroundColor);
-        } else {
-            return false;
+        public StyleBuilder() {
+            this.alignment = TextAlignment.LEFT;
         }
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(alignment, backgroundColor);
-    }
+        public StyleBuilder(ParStyle parStyle) {
+            this.alignment = parStyle.alignment;
+            this.backgroundColor = parStyle.backgroundColor;
+            this.bulletList = parStyle.bulletList;
+            this.numberedList = parStyle.numberedList;
+        }
 
-    @Override
-    public String toString() {
-        return toCss();
+        public ParStyle.StyleBuilder alignment(TextAlignment alignment) {
+            this.alignment = alignment;
+            return this;
+        }
+
+        public ParStyle.StyleBuilder backgroundColor(Color backgroundColor) {
+            this.backgroundColor = backgroundColor;
+            return this;
+        }
+
+        public ParStyle.StyleBuilder bulletList(boolean bulletList) {
+            this.bulletList = bulletList;
+            return this;
+        }
+
+        public ParStyle.StyleBuilder numberedList(boolean numberedList) {
+            this.numberedList = numberedList;
+            return this;
+        }
+
+        public ParStyle build() {
+            return new ParStyle(this);
+        }
     }
 }

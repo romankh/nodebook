@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import nodebook.richtext.StyledAreaFactory;
 import nodebook.richtext.content.LinkedImage;
 import nodebook.richtext.style.ParStyle;
+import nodebook.richtext.style.TextHeader;
 import nodebook.richtext.style.TextStyle;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.model.Paragraph;
@@ -35,62 +36,61 @@ public class RichTextService {
     }
 
     public void toggleBold() {
-        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans ->
-                TextStyle.bold(!spans.styleStream().allMatch(style -> style.bold.orElse(false)));
+        Function<StyleSpans<TextStyle>, StyleSpans<TextStyle>> mixinGetter = styles -> {
+            boolean bold = !styles.styleStream().allMatch(TextStyle::isBold);
+            return styles.mapStyles(style -> TextStyle.builder(style).bold(bold).build());
+        };
         updateStyleInSelection(mixinGetter);
     }
 
     public void toggleItalic() {
-        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans ->
-                TextStyle.italic(!spans.styleStream().allMatch(style -> style.italic.orElse(false)));
+        Function<StyleSpans<TextStyle>, StyleSpans<TextStyle>> mixinGetter = styles -> {
+            boolean italic = !styles.styleStream().allMatch(TextStyle::isItalic);
+            return styles.mapStyles(style -> TextStyle.builder(style).italic(italic).build());
+        };
         updateStyleInSelection(mixinGetter);
     }
 
     public void toggleUnderline() {
-        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans ->
-                TextStyle.underline(!spans.styleStream().allMatch(style -> style.underline.orElse(false)));
+        Function<StyleSpans<TextStyle>, StyleSpans<TextStyle>> mixinGetter = styles -> {
+            boolean underline = !styles.styleStream().allMatch(TextStyle::isUnderline);
+            return styles.mapStyles(style -> TextStyle.builder(style).underline(underline).build());
+        };
         updateStyleInSelection(mixinGetter);
     }
 
     public void toggleStrikethrough() {
-        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans ->
-                TextStyle.strikethrough(!spans.styleStream().allMatch(style -> style.strikethrough.orElse(false)));
+        Function<StyleSpans<TextStyle>, StyleSpans<TextStyle>> mixinGetter = styles -> {
+            boolean strikethrough = !styles.styleStream().allMatch(TextStyle::isStrikethrough);
+            return styles.mapStyles(style -> TextStyle.builder(style).strikethrough(strikethrough).build());
+        };
+        updateStyleInSelection(mixinGetter);
+    }
+
+    public void setFontColor(Color color) {
+        Function<StyleSpans<TextStyle>, StyleSpans<TextStyle>> mixinGetter = styles -> {
+            return styles.mapStyles(style -> TextStyle.builder(style).fontColor(color).build());
+        };
+        updateStyleInSelection(mixinGetter);
+    }
+
+    public void setBackgroundColor(Color color) {
+        Function<StyleSpans<TextStyle>, StyleSpans<TextStyle>> mixinGetter = styles -> {
+            return styles.mapStyles(style -> TextStyle.builder(style).backgroundColor(color).build());
+        };
         updateStyleInSelection(mixinGetter);
     }
 
     public void toggleHeader1() {
-        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans ->
-                TextStyle.header1(!spans.styleStream().allMatch(style -> style.header1.orElse(false)));
-        updateStyleInSelection(mixinGetter);
+        toggleHeader(TextHeader.H1);
     }
 
     public void toggleHeader2() {
-        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans ->
-                TextStyle.header2(!spans.styleStream().allMatch(style -> style.header2.orElse(false)));
-        updateStyleInSelection(mixinGetter);
+        toggleHeader(TextHeader.H2);
     }
 
     public void toggleHeader3() {
-        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans ->
-                TextStyle.header3(!spans.styleStream().allMatch(style -> style.header3.orElse(false)));
-        updateStyleInSelection(mixinGetter);
-    }
-
-    public void addDate() {
-        IndexRange selection = area.getSelection();
-        LocalDate date = LocalDate.now();
-        area.insertText(selection.getEnd(), "\n" + date.toString() + "\n");
-    }
-
-    public void addDateTime() {
-        IndexRange selection = area.getSelection();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        area.insertText(selection.getEnd(), "\n" + LocalDateTime.now().format(formatter) + "\n");
-    }
-
-    public void addSeparator() {
-        IndexRange selection = area.getSelection();
-        area.insertText(selection.getEnd(), "\n" + SEPARATOR + "\n");
+        toggleHeader(TextHeader.H3);
     }
 
     public void toggleBulletList() {
@@ -101,13 +101,14 @@ public class RichTextService {
             for (int i = startPar; i <= endPar; ++i) {
                 Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle> paragraph = area.getParagraph(i);
                 ParStyle parStyle = paragraph.getParagraphStyle();
-                parStyle = parStyle.updateWith(ParStyle.EMPTY.updateBulletList(!parStyle.bulletList.orElse(false)));
-                if (parStyle.bulletList.isPresent() && parStyle.bulletList.get()) {
+                ParStyle newParStyle = ParStyle.builder(parStyle).bulletList(!parStyle.isBulletList()).build();
+
+                if (newParStyle.isBulletList()) {
                     area.insertText(i, 0, "• ");
                 } else if (paragraph.substring(0, 2).startsWith("• ")) {
                     area.replaceText(i, 0, i, 2, "");
                 }
-                area.setParagraphStyle(i, parStyle);
+                area.setParagraphStyle(i, newParStyle);
             }
         }
     }
@@ -121,21 +122,36 @@ public class RichTextService {
             for (int i = startPar; i <= endPar; ++i) {
                 Paragraph<ParStyle, Either<String, LinkedImage>, TextStyle> paragraph = area.getParagraph(i);
                 ParStyle parStyle = paragraph.getParagraphStyle();
-                parStyle = parStyle.updateWith(ParStyle.EMPTY.updateNumberedList(!parStyle.numberedList.orElse(false)));
-                if (parStyle.numberedList.isPresent() && parStyle.numberedList.get()) {
+                ParStyle newParStyle = ParStyle.builder(parStyle).numberedList(!parStyle.isNumberedList()).build();
+
+                if (newParStyle.isNumberedList()) {
                     area.insertText(i, 0, String.valueOf(++number) + ". ");
                 } else if (paragraph.substring(0, 3).startsWith(String.valueOf(++number) + ". ")) {
                     area.replaceText(i, 0, i, 3, "");
                 }
-                area.setParagraphStyle(i, parStyle);
+
+                area.setParagraphStyle(i, newParStyle);
             }
         }
+    }
+
+    public void addDate() {
+        LocalDate date = LocalDate.now();
+        insertText("\n" + date.toString() + "\n");
+    }
+
+    public void addDateTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        insertText("\n" + LocalDateTime.now().format(formatter) + "\n");
+    }
+
+    public void addSeparator() {
+        insertText("\n" + SEPARATOR + "\n");
     }
 
     public void clearFormat() {
         IndexRange selection = area.getSelection();
         if (selection.getLength() != 0) {
-
             TextStyle initial = area.getInitialTextStyle();
             area.setStyle(selection.getStart(), selection.getEnd(), initial);
 
@@ -149,24 +165,27 @@ public class RichTextService {
         }
     }
 
-    public void setFontColor(Color color) {
-        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans -> TextStyle.fontColor(color);
-        updateStyleInSelection(mixinGetter);
-    }
-
-    public void setBackgroundColor(Color color) {
-        Function<StyleSpans<TextStyle>, TextStyle> mixinGetter = spans -> TextStyle.backgroundColor(color);
-        updateStyleInSelection(mixinGetter);
-    }
-
-    private void updateStyleInSelection(Function<StyleSpans<TextStyle>, TextStyle> mixinGetter) {
+    private void updateStyleInSelection(Function<StyleSpans<TextStyle>, StyleSpans<TextStyle>> mixinGetter) {
         IndexRange selection = area.getSelection();
         if (selection.getLength() != 0) {
             StyleSpans<TextStyle> styles = area.getStyleSpans(selection);
-            TextStyle mixin = mixinGetter.apply(styles);
-            StyleSpans<TextStyle> newStyles = styles.mapStyles(style -> style.updateWith(mixin));
+            StyleSpans<TextStyle> newStyles = mixinGetter.apply(styles);
             area.setStyleSpans(selection.getStart(), newStyles);
             area.requestFocus();
         }
+    }
+
+    private void insertText(String text) {
+        IndexRange selection = area.getSelection();
+        area.insertText(selection.getEnd(), text);
+    }
+
+    private void toggleHeader(TextHeader header) {
+        Function<StyleSpans<TextStyle>, StyleSpans<TextStyle>> mixinGetter = styles -> {
+            boolean isHeader = styles.styleStream().allMatch(style -> style.getHeader().equals(header));
+            TextHeader newHeader = isHeader ? TextHeader.NONE : header;
+            return styles.mapStyles(style -> TextStyle.builder(style).header(newHeader).build());
+        };
+        updateStyleInSelection(mixinGetter);
     }
 }
