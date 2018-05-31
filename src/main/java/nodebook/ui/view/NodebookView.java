@@ -1,4 +1,4 @@
-package nodebook.view;
+package nodebook.ui.view;
 
 import de.felixroske.jfxsupport.AbstractFxmlView;
 import de.felixroske.jfxsupport.FXMLView;

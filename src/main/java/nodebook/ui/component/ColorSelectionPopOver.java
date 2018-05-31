@@ -1,4 +1,4 @@
-package nodebook.ui;
+package nodebook.ui.component;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;

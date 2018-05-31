@@ -1,4 +1,4 @@
-package nodebook.ui;
+package nodebook.ui.component;
 
 import de.felixroske.jfxsupport.SplashScreen;
 

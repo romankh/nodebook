@@ -1,4 +1,4 @@
-package nodebook.richtext.content;
+package nodebook.ui.richtext.content;
 
 import org.fxmisc.richtext.model.NodeSegmentOpsBase;
 

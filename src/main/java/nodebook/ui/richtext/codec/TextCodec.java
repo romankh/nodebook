@@ -1,6 +1,6 @@
-package nodebook.richtext.codec;
+package nodebook.ui.richtext.codec;
 
-import nodebook.richtext.style.TextStyle;
+import nodebook.ui.richtext.style.TextStyle;
 import org.fxmisc.richtext.model.Codec;
 
 import java.io.DataInputStream;

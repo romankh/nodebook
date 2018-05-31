@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
-import nodebook.ui.ColorSelectionPopOver;
+import nodebook.ui.component.ColorSelectionPopOver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

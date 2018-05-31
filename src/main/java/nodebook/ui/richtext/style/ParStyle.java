@@ -1,4 +1,4 @@
-package nodebook.richtext.style;
+package nodebook.ui.richtext.style;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;

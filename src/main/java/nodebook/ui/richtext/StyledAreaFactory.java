@@ -1,13 +1,13 @@
-package nodebook.richtext;
+package nodebook.ui.richtext;
 
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import nodebook.richtext.content.LinkedImage;
-import nodebook.richtext.content.LinkedImageOps;
-import nodebook.richtext.codec.ParCodec;
-import nodebook.richtext.style.ParStyle;
-import nodebook.richtext.codec.TextCodec;
-import nodebook.richtext.style.TextStyle;
+import nodebook.ui.richtext.content.LinkedImage;
+import nodebook.ui.richtext.content.LinkedImageOps;
+import nodebook.ui.richtext.codec.ParCodec;
+import nodebook.ui.richtext.style.ParStyle;
+import nodebook.ui.richtext.codec.TextCodec;
+import nodebook.ui.richtext.style.TextStyle;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyledTextArea;

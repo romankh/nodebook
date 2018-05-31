@@ -1,4 +1,4 @@
-package nodebook.richtext.style;
+package nodebook.ui.richtext.style;
 
 public enum TextHeader {
     NONE,

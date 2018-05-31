@@ -1,8 +1,8 @@
 package nodebook;
 
 import de.felixroske.jfxsupport.AbstractJavaFxApplicationSupport;
-import nodebook.ui.AppSplashScreen;
-import nodebook.view.NodebookView;
+import nodebook.ui.component.AppSplashScreen;
+import nodebook.ui.view.NodebookView;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
