@@ -5,12 +5,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.IndexRange;
+import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import nodebook.persistence.Page;
+import nodebook.service.DataService;
 import nodebook.ui.component.ColorSelectionPopOver;
 import nodebook.ui.richtext.StyledAreaFactory;
 import nodebook.ui.richtext.content.LinkedImage;
@@ -35,8 +37,9 @@ import java.util.function.Function;
 @FXMLController
 public class NodebookController implements Initializable {
     private final String SEPARATOR = "--------------------------------------------------------------------------------";
+    private final DataService dataService;
     @FXML
-    private TreeView<String> nodeTreeView;
+    private TreeView<Page> nodeTreeView;
     @FXML
     private ToolBar toolBar;
     @FXML
@@ -49,7 +52,8 @@ public class NodebookController implements Initializable {
             .getStyledTextArea();
 
     @Autowired
-    public NodebookController() {
+    public NodebookController(DataService dataService) {
+        this.dataService = dataService;
     }
 
     @FXML
@@ -58,8 +62,6 @@ public class NodebookController implements Initializable {
         this.initToolBar();
         this.initNodeTree();
         this.initRichText();
-
-//        richTextService.initalize(richtextPane);
     }
 
     public void showFontColorPopOver() {
@@ -100,11 +102,10 @@ public class NodebookController implements Initializable {
     }
 
     private void initNodeTree() {
-        TreeItem<String> rootItem = ControllerUtil.createTreeItem("Root", 0);
-        rootItem.getChildren().add(ControllerUtil.createTreeItem("Test", 1));
-        rootItem.getChildren().add(ControllerUtil.createTreeItem("Test 2", 1));
-        rootItem.getChildren().add(ControllerUtil.createTreeItem("Test 3", 1));
-        nodeTreeView.setRoot(rootItem);
+        nodeTreeView.setRoot(ControllerUtil.createRootTreeItem(dataService.getRootPage()));
+        nodeTreeView.setShowRoot(false);
+        MultipleSelectionModel selectionModel = nodeTreeView.getSelectionModel();
+        selectionModel.select(0);
     }
 
     private void initRichText() {

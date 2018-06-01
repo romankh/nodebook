@@ -6,6 +6,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import nodebook.persistence.Page;
 
 import java.util.List;
 
@@ -104,12 +105,41 @@ public final class ControllerUtil {
         return button;
     }
 
-    public static TreeItem<String> createTreeItem(String name, int treeLevel) {
-        ImageView imageView = new ImageView(
+//    public static TreeItem<Page> createTreeItem(String name, int treeLevel) {
+//        ImageView imageView = new ImageView(
+//                new Image(ControllerUtil.class.getResourceAsStream(getIconName(treeLevel)))
+//        );
+//
+//        Page page = new Page();
+//        page.setTitle(name);
+//        page.setExpanded(true);
+//
+//        return new TreeItem<>(page, imageView);
+//    }
+
+    public static TreeItem<Page> createRootTreeItem(Page rootPage) {
+        TreeItem<Page> rootItem = new TreeItem<>(rootPage);
+
+        for (Page subPage : rootPage.getChildren()) {
+            rootItem.getChildren().add(createTreeItem(subPage, 0));
+        }
+
+        return rootItem;
+    }
+
+    public static TreeItem<Page> createTreeItem(Page page, int treeLevel) {
+        ImageView icon = new ImageView(
                 new Image(ControllerUtil.class.getResourceAsStream(getIconName(treeLevel)))
         );
 
-        return new TreeItem<>(name, imageView);
+        TreeItem<Page> item = new TreeItem<>(page, icon);
+        item.setExpanded(page.isExpanded());
+
+        for (Page subPage : page.getChildren()) {
+            item.getChildren().add(createTreeItem(subPage, treeLevel + 1));
+        }
+
+        return item;
     }
 
     private static String getIconName(int treeLevel) {

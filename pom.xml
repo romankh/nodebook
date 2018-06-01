@@ -28,6 +28,7 @@
         <springboot-javafx.version>2.1.6</springboot-javafx.version>
         <richtextfx.version>0.9.0</richtextfx.version>
         <controlsfx.version>8.40.14</controlsfx.version>
+        <nitrite.version>3.0.0</nitrite.version>
         <guava.version>13.0.1</guava.version>
     </properties>
 
@@ -62,6 +63,11 @@
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
             <version>${controlsfx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dizitart</groupId>
+            <artifactId>nitrite</artifactId>
+            <version>${nitrite.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
