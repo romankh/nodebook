@@ -7,7 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class ParCodec implements Codec<ParStyle> {
+public class NoOpParCodec implements Codec<ParStyle> {
     @Override
     public String getName() {
         return "par-style";

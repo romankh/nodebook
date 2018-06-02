@@ -4,9 +4,9 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import nodebook.ui.richtext.content.LinkedImage;
 import nodebook.ui.richtext.content.LinkedImageOps;
-import nodebook.ui.richtext.codec.ParCodec;
+import nodebook.ui.richtext.codec.NoOpParCodec;
 import nodebook.ui.richtext.style.ParStyle;
-import nodebook.ui.richtext.codec.TextCodec;
+import nodebook.ui.richtext.codec.NoOpTextCodec;
 import nodebook.ui.richtext.style.TextStyle;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.LineNumberFactory;
@@ -41,8 +41,8 @@ public class StyledAreaFactory {
 
         area.setWrapText(true);
         area.setStyleCodecs(
-                new ParCodec(),
-                Codec.styledSegmentCodec(Codec.eitherCodec(Codec.STRING_CODEC, LinkedImage.codec()), new TextCodec()));
+                new NoOpParCodec(),
+                Codec.styledSegmentCodec(Codec.eitherCodec(Codec.STRING_CODEC, LinkedImage.codec()), new NoOpTextCodec()));
         area.setParagraphGraphicFactory(LineNumberFactory.get(area));
         return area;
     }

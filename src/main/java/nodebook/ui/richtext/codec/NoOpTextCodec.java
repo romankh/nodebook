@@ -7,7 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class TextCodec implements Codec<TextStyle> {
+public class NoOpTextCodec implements Codec<TextStyle> {
     @Override
     public String getName() {
         return "text-style";
