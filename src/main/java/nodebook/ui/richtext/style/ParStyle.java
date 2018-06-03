@@ -1,6 +1,5 @@
 package nodebook.ui.richtext.style;
 
-import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
 /**
@@ -8,7 +7,7 @@ import javafx.scene.text.TextAlignment;
  */
 public class ParStyle {
     private final TextAlignment alignment;
-    private final Color backgroundColor;
+    private final ColorStyle backgroundColor;
     private final boolean bulletList;
     private final boolean numberedList;
 
@@ -31,7 +30,7 @@ public class ParStyle {
         return alignment;
     }
 
-    public Color getBackgroundColor() {
+    public ColorStyle getBackgroundColor() {
         return backgroundColor;
     }
 
@@ -76,7 +75,7 @@ public class ParStyle {
 
     public static class StyleBuilder {
         private TextAlignment alignment;
-        private Color backgroundColor;
+        private ColorStyle backgroundColor;
         private boolean bulletList;
         private boolean numberedList;
 
@@ -96,7 +95,7 @@ public class ParStyle {
             return this;
         }
 
-        public ParStyle.StyleBuilder backgroundColor(Color backgroundColor) {
+        public ParStyle.StyleBuilder backgroundColor(ColorStyle backgroundColor) {
             this.backgroundColor = backgroundColor;
             return this;
         }

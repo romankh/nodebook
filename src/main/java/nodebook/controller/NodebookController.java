@@ -10,12 +10,12 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import nodebook.persistence.Page;
 import nodebook.service.DataService;
 import nodebook.ui.component.ColorSelectionPopOver;
 import nodebook.ui.richtext.StyledAreaFactory;
 import nodebook.ui.richtext.content.LinkedImage;
+import nodebook.ui.richtext.style.ColorStyle;
 import nodebook.ui.richtext.style.ParStyle;
 import nodebook.ui.richtext.style.TextHeader;
 import nodebook.ui.richtext.style.TextStyle;
@@ -149,14 +149,14 @@ public class NodebookController implements Initializable {
         updateStyleInSelection(mixinGetter);
     }
 
-    public void setFontColor(Color color) {
+    public void setFontColor(ColorStyle color) {
         Function<StyleSpans<TextStyle>, StyleSpans<TextStyle>> mixinGetter = styles -> {
             return styles.mapStyles(style -> TextStyle.builder(style).fontColor(color).build());
         };
         updateStyleInSelection(mixinGetter);
     }
 
-    public void setBackgroundColor(Color color) {
+    public void setBackgroundColor(ColorStyle color) {
         Function<StyleSpans<TextStyle>, StyleSpans<TextStyle>> mixinGetter = styles -> {
             return styles.mapStyles(style -> TextStyle.builder(style).backgroundColor(color).build());
         };

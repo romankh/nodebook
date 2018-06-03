@@ -1,7 +1,5 @@
 package nodebook.ui.richtext.style;
 
-import javafx.scene.paint.Color;
-
 public class TextStyle {
     private final int fontSize;
     private final String fontFamily;
@@ -9,8 +7,8 @@ public class TextStyle {
     private final boolean italic;
     private final boolean underline;
     private final boolean strikethrough;
-    private final Color fontColor;
-    private final Color backgroundColor;
+    private final ColorStyle fontColor;
+    private final ColorStyle backgroundColor;
     private final TextHeader header;
 
     public TextStyle(StyleBuilder styleBuilder) {
@@ -56,7 +54,7 @@ public class TextStyle {
     }
 
     public boolean isBold() {
-        return bold || header != TextHeader.NONE;
+        return bold;
     }
 
     public boolean isItalic() {
@@ -71,11 +69,11 @@ public class TextStyle {
         return strikethrough;
     }
 
-    public Color getFontColor() {
+    public ColorStyle getFontColor() {
         return fontColor;
     }
 
-    public Color getBackgroundColor() {
+    public ColorStyle getBackgroundColor() {
         return backgroundColor;
     }
 
@@ -85,25 +83,25 @@ public class TextStyle {
 
     public String toCss() {
         StringBuilder sb = new StringBuilder();
-        if (isBold()) {
+        if (bold || !header.equals(TextHeader.NONE)) {
             sb.append("-fx-font-weight: bold;");
         } else {
             sb.append("-fx-font-weight: normal;");
         }
 
-        if (isItalic()) {
+        if (italic) {
             sb.append("-fx-font-style: italic;");
         } else {
             sb.append("-fx-font-style: normal;");
         }
 
-        if (isUnderline()) {
+        if (underline) {
             sb.append("-fx-underline: true;");
         } else {
             sb.append("-fx-underline: false;");
         }
 
-        if (isStrikethrough()) {
+        if (strikethrough) {
             sb.append("-fx-strikethrough: true;");
         } else {
             sb.append("-fx-strikethrough: false;");
@@ -112,11 +110,11 @@ public class TextStyle {
         sb.append("-fx-font-size: ").append(getFontSize()).append("pt;");
         sb.append("-fx-font-family: ").append(getFontFamily()).append(";");
 
-        if (getFontColor() != null) {
+        if (fontColor != ColorStyle.NONE) {
             sb.append("-fx-fill: ").append(StyleUtil.cssColor(getFontColor())).append(";");
         }
 
-        if (getBackgroundColor() != null) {
+        if (backgroundColor != ColorStyle.NONE) {
             sb.append("-rtfx-background-color: ").append(StyleUtil.cssColor(getBackgroundColor())).append(";");
         }
 
@@ -130,14 +128,16 @@ public class TextStyle {
         private boolean italic;
         private boolean underline;
         private boolean strikethrough;
-        private Color fontColor;
-        private Color backgroundColor;
+        private ColorStyle fontColor;
+        private ColorStyle backgroundColor;
         private TextHeader header;
 
         public StyleBuilder(int fontSize, String fontFamily) {
             this.fontSize = fontSize;
             this.fontFamily = fontFamily;
             this.header = TextHeader.NONE;
+            this.fontColor = ColorStyle.NONE;
+            this.backgroundColor = ColorStyle.NONE;
         }
 
         public StyleBuilder(TextStyle textStyle) {
@@ -172,12 +172,12 @@ public class TextStyle {
             return this;
         }
 
-        public StyleBuilder fontColor(Color fontColor) {
+        public StyleBuilder fontColor(ColorStyle fontColor) {
             this.fontColor = fontColor;
             return this;
         }
 
-        public StyleBuilder backgroundColor(Color backgroundColor) {
+        public StyleBuilder backgroundColor(ColorStyle backgroundColor) {
             this.backgroundColor = backgroundColor;
             return this;
         }

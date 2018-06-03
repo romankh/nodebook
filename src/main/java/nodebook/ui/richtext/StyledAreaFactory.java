@@ -1,12 +1,12 @@
 package nodebook.ui.richtext;
 
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
+import nodebook.ui.richtext.codec.NoOpParCodec;
+import nodebook.ui.richtext.codec.NoOpTextCodec;
 import nodebook.ui.richtext.content.LinkedImage;
 import nodebook.ui.richtext.content.LinkedImageOps;
-import nodebook.ui.richtext.codec.NoOpParCodec;
+import nodebook.ui.richtext.style.ColorStyle;
 import nodebook.ui.richtext.style.ParStyle;
-import nodebook.ui.richtext.codec.NoOpTextCodec;
 import nodebook.ui.richtext.style.TextStyle;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.LineNumberFactory;
@@ -32,7 +32,7 @@ public class StyledAreaFactory {
                 // paragraph style setter
                 (paragraph, style) -> paragraph.setStyle(style.toCss()),
                 // default segment style
-                TextStyle.builder(11, "Sans").fontColor(Color.BLACK).build(),
+                TextStyle.builder(11, "Sans").fontColor(ColorStyle.BLACK).build(),
                 // segment operations
                 styledTextOps._or(linkedImageOps, (s1, s2) -> Optional.empty()),
                 // node factory

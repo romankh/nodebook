@@ -12,18 +12,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import nodebook.ui.richtext.style.ColorStyle;
 import org.controlsfx.control.PopOver;
 
 public class ColorSelectionPopOver extends PopOver {
-    private final Color[] colors = {
-            Color.TRANSPARENT, Color.BLACK, Color.DARKGRAY, Color.GRAY, Color.LIGHTGRAY, Color.WHITE,
-            Color.DARKBLUE, Color.BLUE, Color.LIGHTBLUE,
-            Color.DARKGREEN, Color.GREEN, Color.LIGHTGREEN,
-            Color.DARKRED, Color.RED, Color.valueOf("ff7b7b"),
-            Color.ORANGERED, Color.ORANGE, Color.YELLOW
-    };
     private final int NUMBER_OF_COLUMNS = 6;
-    private final ReadOnlyObjectWrapper<Color> selectedColor = new ReadOnlyObjectWrapper<>();
+    private final ReadOnlyObjectWrapper<ColorStyle> selectedColor = new ReadOnlyObjectWrapper<>();
     private final String title;
 
     private ObjectProperty<EventHandler<ActionEvent>> onAction = new ObjectPropertyBase<EventHandler<ActionEvent>>() {
@@ -60,7 +54,7 @@ public class ColorSelectionPopOver extends PopOver {
         onActionProperty().set(value);
     }
 
-    public Color getSelectedColor() {
+    public ColorStyle getSelectedColor() {
         return selectedColor.get();
     }
 
@@ -80,14 +74,16 @@ public class ColorSelectionPopOver extends PopOver {
         gridPane.setVgap(5);
 
         int row = 0;
-        for (int i = 0; i < colors.length; i++) {
+        for (int i = 0; i < ColorStyle.values().length; i++) {
             final Button button = new Button();
             button.setPrefSize(25, 25);
 
-            final Color color = colors[i];
+            final ColorStyle color = ColorStyle.values()[i];
 
-            final Tooltip tooltip = new Tooltip(colors[i].toString());
-            final Rectangle rectangle = new Rectangle(25, 25, color);
+            final Tooltip tooltip = new Tooltip(ColorStyle.values()[i].toString());
+            final Rectangle rectangle = new Rectangle(25, 25,
+                    new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getOpacity())
+            );
             rectangle.setStroke(Color.BLACK);
             button.setTooltip(tooltip);
             button.setGraphic(rectangle);
