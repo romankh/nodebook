@@ -1,4 +1,4 @@
-package nodebook.service.codec;
+package nodebook.persistence.codec;
 
 import javafx.scene.text.TextAlignment;
 import nodebook.ui.richtext.style.ColorStyle;

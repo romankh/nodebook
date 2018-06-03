@@ -1,4 +1,4 @@
-package nodebook.service.codec;
+package nodebook.persistence.codec;
 
 import nodebook.ui.richtext.style.ParStyle;
 

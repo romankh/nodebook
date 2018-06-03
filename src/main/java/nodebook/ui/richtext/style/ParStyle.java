@@ -66,7 +66,7 @@ public class ParStyle {
         }
         sb.append("-fx-text-alignment: ").append(cssAlignment).append(";");
 
-        if (backgroundColor != null) {
+        if (backgroundColor != null && !backgroundColor.equals(ColorStyle.NONE)) {
             sb.append("-fx-background-color: ").append(StyleUtil.cssColor(getBackgroundColor())).append(";");
         }
 

@@ -10,10 +10,10 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
-import nodebook.persistence.Page;
+import nodebook.persistence.entities.Page;
 import nodebook.service.DataService;
 import nodebook.ui.component.ColorSelectionPopOver;
-import nodebook.ui.richtext.StyledAreaFactory;
+import nodebook.ui.richtext.RichtextUtil;
 import nodebook.ui.richtext.content.LinkedImage;
 import nodebook.ui.richtext.style.ColorStyle;
 import nodebook.ui.richtext.style.ParStyle;
@@ -22,6 +22,7 @@ import nodebook.ui.richtext.style.TextStyle;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.model.Paragraph;
 import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyledDocument;
 import org.fxmisc.richtext.model.TwoDimensional;
 import org.reactfx.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class NodebookController implements Initializable {
     private Button fontBackgroundButton;
     private ColorSelectionPopOver fontColorPopOver;
     private ColorSelectionPopOver fontBackgroundPopOver;
-    private GenericStyledArea<ParStyle, Either<String, LinkedImage>, TextStyle> area = StyledAreaFactory
+    private GenericStyledArea<ParStyle, Either<String, LinkedImage>, TextStyle> area = RichtextUtil
             .getStyledTextArea();
 
     @Autowired
@@ -62,6 +63,25 @@ public class NodebookController implements Initializable {
         this.initToolBar();
         this.initNodeTree();
         this.initRichText();
+        this.setDocument(
+                dataService.getContent(
+                        nodeTreeView.getSelectionModel().getSelectedItem().getValue().getId()
+                )
+        );
+    }
+
+    public void loadDocument(String pageId) {
+        setDocument(dataService.getContent(pageId));
+    }
+
+    public void setDocument(StyledDocument<ParStyle, Either<String, LinkedImage>, TextStyle> styledDocument) {
+        area.selectAll();
+        area.replaceSelection(styledDocument);
+    }
+
+    public void saveDocument() {
+        String id = nodeTreeView.getSelectionModel().getSelectedItem().getValue().getId();
+        this.dataService.saveContent(id, area.getDocument());
     }
 
     public void showFontColorPopOver() {
@@ -106,6 +126,9 @@ public class NodebookController implements Initializable {
         nodeTreeView.setShowRoot(false);
         MultipleSelectionModel selectionModel = nodeTreeView.getSelectionModel();
         selectionModel.select(0);
+        nodeTreeView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> loadDocument(newValue.getValue().getId())
+        );
     }
 
     private void initRichText() {

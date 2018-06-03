@@ -1,47 +1,20 @@
 package nodebook.service;
 
-import nodebook.persistence.Content;
-import nodebook.persistence.Page;
-import org.dizitart.no2.Nitrite;
-import org.dizitart.no2.objects.Cursor;
-import org.dizitart.no2.objects.ObjectRepository;
-import org.dizitart.no2.objects.filters.ObjectFilters;
-import org.springframework.stereotype.Service;
+import nodebook.persistence.entities.Page;
+import nodebook.ui.richtext.content.LinkedImage;
+import nodebook.ui.richtext.style.ParStyle;
+import nodebook.ui.richtext.style.TextStyle;
+import org.fxmisc.richtext.model.StyledDocument;
+import org.reactfx.util.Either;
 
-import java.util.Optional;
+public interface DataService {
+    Page createEmptyRootPage();
 
-@Service
-public class DataService {
-    private final String rootPageId = "4 8 15 16 23 42";
-    private Nitrite db = Nitrite.builder()
-            .compressed()
-            .filePath("/tmp/test.db")
-            .openOrCreate("user", "password");
-    private ObjectRepository<Page> pageRepository = db.getRepository(Page.class);
+    Page getRootPage();
 
-    public Page createEmptyRootPage() {
-        Page rootPage = new Page();
-        rootPage.setId(rootPageId);
-        rootPage.setTitle("root-page");
-        rootPage.setExpanded(true);
-        return rootPage;
-    }
+    void saveRootPage(Page page);
 
-    public Page getRootPage() {
-        Cursor<Page> cursor = pageRepository.find(ObjectFilters.eq("id", rootPageId));
-        return cursor.firstOrDefault();
-    }
+    StyledDocument<ParStyle, Either<String, LinkedImage>, TextStyle> getContent(String pageId);
 
-    public Page saveRootPage(Page page) {
-        pageRepository.update(page, true);
-        return page;
-    }
-
-    public Optional<Content> getContent(String pageId, Content content) {
-        return Optional.of(content);
-    }
-
-    public Content saveContent(String pageId, Content content) {
-        return content;
-    }
+    void saveContent(String pageId, StyledDocument<ParStyle, Either<String, LinkedImage>, TextStyle> content);
 }

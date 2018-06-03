@@ -1,12 +1,14 @@
-package nodebook.persistence;
+package nodebook.persistence.entities;
 
-import org.dizitart.no2.objects.Id;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Content {
-    @Id
+public class Content implements Serializable {
+    @JsonProperty("i")
     private String id;
+    @JsonProperty("p")
     private List<ContentParagraph> paragraphs;
 
     public String getId() {

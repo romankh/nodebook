@@ -1,4 +1,4 @@
-package nodebook.service.codec;
+package nodebook.persistence.codec;
 
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.FieldDefinitionBuilder;

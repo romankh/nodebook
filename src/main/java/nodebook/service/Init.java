@@ -1,6 +1,6 @@
 package nodebook.service;
 
-import nodebook.persistence.Page;
+import nodebook.persistence.entities.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -19,23 +19,32 @@ public class Init implements ApplicationListener<ApplicationReadyEvent> {
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        Page rootPage = dataService.createEmptyRootPage();
-        for (int i = 0; i < 3; i++) {
-            Page page = createPage("page-" + String.valueOf(i));
 
-            for (int j = 0; j < 3; j++) {
-                Page subPage = createPage("sub-page-lvl1-" + String.valueOf(j));
+        boolean doIt = false;
+//        doIt = true;
 
-                for (int k = 0; k < 2; k++) {
-                    Page subsubPage = createPage("sub-page-lvl2-" + String.valueOf(k));
-                    subPage.getChildren().add(subsubPage);
+
+        if (doIt) {
+            Page rootPage = dataService.createEmptyRootPage();
+
+            for (int i = 0; i < 3; i++) {
+                Page page = createPage("page-" + String.valueOf(i));
+
+                for (int j = 0; j < 3; j++) {
+                    Page subPage = createPage("sub-page-lvl1-" + String.valueOf(j));
+
+                    for (int k = 0; k < 2; k++) {
+                        Page subsubPage = createPage("sub-page-lvl2-" + String.valueOf(k));
+                        subPage.getChildren().add(subsubPage);
+                    }
+                    page.getChildren().add(subPage);
                 }
-                page.getChildren().add(subPage);
+                rootPage.getChildren().add(page);
             }
-            rootPage.getChildren().add(page);
-        }
 
-        dataService.saveRootPage(rootPage);
+            dataService.saveRootPage(rootPage);
+
+        }
     }
 
     private Page createPage(String title) {

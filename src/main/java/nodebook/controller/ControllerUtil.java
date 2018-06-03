@@ -6,7 +6,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import nodebook.persistence.Page;
+import nodebook.persistence.entities.Page;
 
 import java.util.List;
 
@@ -54,6 +54,8 @@ public final class ControllerUtil {
 
     public static Runnable getAction(String button, NodebookController controller) {
         switch (button) {
+            case "save":
+            return controller::saveDocument;
             case "bold":
                 return controller::toggleBold;
             case "italic":
@@ -104,18 +106,6 @@ public final class ControllerUtil {
 
         return button;
     }
-
-//    public static TreeItem<Page> createTreeItem(String name, int treeLevel) {
-//        ImageView imageView = new ImageView(
-//                new Image(ControllerUtil.class.getResourceAsStream(getIconName(treeLevel)))
-//        );
-//
-//        Page page = new Page();
-//        page.setTitle(name);
-//        page.setExpanded(true);
-//
-//        return new TreeItem<>(page, imageView);
-//    }
 
     public static TreeItem<Page> createRootTreeItem(Page rootPage) {
         TreeItem<Page> rootItem = new TreeItem<>(rootPage);

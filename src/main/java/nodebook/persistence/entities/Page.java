@@ -1,21 +1,19 @@
-package nodebook.persistence;
+package nodebook.persistence.entities;
 
-import org.dizitart.no2.IndexType;
-import org.dizitart.no2.objects.Id;
-import org.dizitart.no2.objects.Index;
-import org.dizitart.no2.objects.Indices;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Indices({
-        @Index(value = "title", type = IndexType.Fulltext)
-})
-public class Page {
-    @Id
+public class Page implements Serializable {
+    @JsonProperty("i")
     private String id;
+    @JsonProperty("t")
     private String title;
+    @JsonProperty("x")
     private Boolean expanded;
+    @JsonProperty("c")
     private List<Page> children = new ArrayList<>();
 
     public String getId() {

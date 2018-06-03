@@ -1,14 +1,13 @@
-package nodebook.persistence;
+package nodebook.persistence.entities;
 
-import org.dizitart.no2.IndexType;
-import org.dizitart.no2.objects.Index;
-import org.dizitart.no2.objects.Indices;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Indices({
-        @Index(value = "text", type = IndexType.Fulltext)
-})
-public class ContentSegment {
+import java.io.Serializable;
+
+public class ContentSegment implements Serializable {
+    @JsonProperty("y")
     private Integer style;
+    @JsonProperty("t")
     private String text;
 
     public Integer getStyle() {
