@@ -121,6 +121,38 @@ public class TextStyle {
         return sb.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TextStyle textStyle = (TextStyle) o;
+
+        if (fontSize != textStyle.fontSize) return false;
+        if (bold != textStyle.bold) return false;
+        if (italic != textStyle.italic) return false;
+        if (underline != textStyle.underline) return false;
+        if (strikethrough != textStyle.strikethrough) return false;
+        if (!fontFamily.equals(textStyle.fontFamily)) return false;
+        if (fontColor != textStyle.fontColor) return false;
+        if (backgroundColor != textStyle.backgroundColor) return false;
+        return header == textStyle.header;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = fontSize;
+        result = 31 * result + fontFamily.hashCode();
+        result = 31 * result + (bold ? 1 : 0);
+        result = 31 * result + (italic ? 1 : 0);
+        result = 31 * result + (underline ? 1 : 0);
+        result = 31 * result + (strikethrough ? 1 : 0);
+        result = 31 * result + fontColor.hashCode();
+        result = 31 * result + backgroundColor.hashCode();
+        result = 31 * result + header.hashCode();
+        return result;
+    }
+
     public static class StyleBuilder {
         private final int fontSize;
         private final String fontFamily;

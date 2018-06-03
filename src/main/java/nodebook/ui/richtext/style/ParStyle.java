@@ -73,6 +73,28 @@ public class ParStyle {
         return sb.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParStyle parStyle = (ParStyle) o;
+
+        if (bulletList != parStyle.bulletList) return false;
+        if (numberedList != parStyle.numberedList) return false;
+        if (alignment != parStyle.alignment) return false;
+        return backgroundColor == parStyle.backgroundColor;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = alignment.hashCode();
+        result = 31 * result + backgroundColor.hashCode();
+        result = 31 * result + (bulletList ? 1 : 0);
+        result = 31 * result + (numberedList ? 1 : 0);
+        return result;
+    }
+
     public static class StyleBuilder {
         private TextAlignment alignment;
         private ColorStyle backgroundColor;
