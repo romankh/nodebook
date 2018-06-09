@@ -1,13 +1,18 @@
 package nodebook.controller;
 
 import de.felixroske.jfxsupport.FXMLController;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.IndexRange;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import nodebook.persistence.entities.Page;
@@ -32,6 +37,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
@@ -80,8 +86,45 @@ public class NodebookController implements Initializable {
     }
 
     public void saveDocument() {
+        TreeItem<Page> rootItem = nodeTreeView.getRoot();
+        Page rootPage = rootItem.getValue();
+        dataService.saveRootPage(rootPage);
+
         String id = nodeTreeView.getSelectionModel().getSelectedItem().getValue().getId();
         this.dataService.saveContent(id, area.getDocument());
+    }
+
+    public void addNode() {
+        ControllerUtil.addTreeNode(
+                nodeTreeView.getSelectionModel().getSelectedItem().getParent()
+        );
+    }
+
+    public void addSubNode() {
+        ControllerUtil.addTreeNode(
+                nodeTreeView.getSelectionModel().getSelectedItem()
+        );
+    }
+
+    public void editNode() {
+        TreeItem<Page> treeItem = nodeTreeView.getSelectionModel().getSelectedItem();
+        Page page = treeItem.getValue();
+        TextInputDialog dialog = ControllerUtil.getChangeTreeNodeDialog(page.getTitle());
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent() && result.get().length() > 0) {
+            page.setTitle(result.get());
+            treeItem.setValue(page);
+            TreeItem.TreeModificationEvent<Page> event = new TreeItem.TreeModificationEvent<>(
+                    TreeItem.valueChangedEvent(), treeItem);
+            Event.fireEvent(treeItem, event);
+        }
+    }
+
+    public void deleteNode() {
+        TreeItem<Page> treeItem = nodeTreeView.getSelectionModel().getSelectedItem();
+        TreeItem<Page> parentTreeItem = treeItem.getParent();
+        parentTreeItem.getChildren().remove(treeItem);
+        parentTreeItem.getValue().getChildren().remove(treeItem.getValue());
     }
 
     public void showFontColorPopOver() {
@@ -129,6 +172,17 @@ public class NodebookController implements Initializable {
         nodeTreeView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> loadDocument(newValue.getValue().getId())
         );
+
+        ContextMenu nodeTreeContextMenu = new ContextMenu();
+        MenuItem editMenuItem = new MenuItem("Edit node");
+        editMenuItem.setOnAction(event -> editNode());
+        nodeTreeContextMenu.getItems().add(editMenuItem);
+
+        MenuItem deleteMenuItem = new MenuItem("Delete node");
+        deleteMenuItem.setOnAction(event -> deleteNode());
+        nodeTreeContextMenu.getItems().add(deleteMenuItem);
+
+        nodeTreeView.setContextMenu(nodeTreeContextMenu);
     }
 
     private void initRichText() {
