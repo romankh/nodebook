@@ -97,13 +97,15 @@ public class NodebookController implements Initializable {
 
     public void addNode() {
         ControllerUtil.addTreeNode(
-                nodeTreeView.getSelectionModel().getSelectedItem().getParent()
+                nodeTreeView.getSelectionModel().getSelectedItem().getParent(),
+                ControllerUtil.NodeDialogType.ADD_NODE
         );
     }
 
     public void addSubNode() {
         ControllerUtil.addTreeNode(
-                nodeTreeView.getSelectionModel().getSelectedItem()
+                nodeTreeView.getSelectionModel().getSelectedItem(),
+                ControllerUtil.NodeDialogType.ADD_SUBNODE
         );
     }
 

@@ -158,16 +158,20 @@ public final class ControllerUtil {
         return result;
     }
 
-    public static TextInputDialog getAddTreeNodeDialog() {
-        return getTreeNodeDialog("Add node", "Add node on same level as selected", "Name: ", null);
+    public static TextInputDialog getAddTreeNodeDialog(NodeDialogType dialogType) {
+        if (dialogType.equals(NodeDialogType.ADD_NODE)) {
+            return getTreeNodeDialog("Add node", "Add node on same level as selected", "Name: ", null);
+        }
+        return getTreeNodeDialog("Add sub node", "Add node as child of the selected", "Name: ", null);
     }
 
     public static TextInputDialog getChangeTreeNodeDialog(String currentValue) {
         return getTreeNodeDialog("Edit node", "Edit node name", "Name: ", currentValue);
     }
 
-    public static void addTreeNode(TreeItem<Page> parent) {
-        TextInputDialog dialog = ControllerUtil.getAddTreeNodeDialog();
+    public static void addTreeNode(TreeItem<Page> parent, NodeDialogType dialogType) {
+        TextInputDialog dialog = ControllerUtil.getAddTreeNodeDialog(dialogType);
+
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent() && result.get().length() > 0) {
             Page page = new Page();
@@ -216,5 +220,11 @@ public final class ControllerUtil {
         dialog.getDialogPane().setHeaderText(headerText);
         dialog.getDialogPane().setContentText(contentText);
         return dialog;
+    }
+
+    public static enum NodeDialogType {
+        ADD_NODE,
+        ADD_SUBNODE,
+        EDIT
     }
 }
