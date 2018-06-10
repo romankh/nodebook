@@ -18,10 +18,10 @@ public class GZIPFileStrategy implements PersistenceStrategy {
     private final String db;
     private final ObjectMapper objectMapper;
 
-    public GZIPFileStrategy(String rootPath, String db, ObjectMapper objectMapper) {
+    public GZIPFileStrategy(String rootPath, String db) {
         this.rootPath = rootPath;
         this.db = db;
-        this.objectMapper = objectMapper;
+        this.objectMapper = new ObjectMapper();
     }
 
     @Override

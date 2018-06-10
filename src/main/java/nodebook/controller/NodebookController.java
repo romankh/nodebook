@@ -16,7 +16,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import nodebook.persistence.entities.Page;
-import nodebook.service.DataService;
+import nodebook.persistence.session.Session;
 import nodebook.ui.component.ColorSelectionPopOver;
 import nodebook.ui.richtext.RichtextUtil;
 import nodebook.ui.richtext.content.LinkedImage;
@@ -27,7 +27,6 @@ import nodebook.ui.richtext.style.TextStyle;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.model.Paragraph;
 import org.fxmisc.richtext.model.StyleSpans;
-import org.fxmisc.richtext.model.StyledDocument;
 import org.fxmisc.richtext.model.TwoDimensional;
 import org.reactfx.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,6 @@ import java.util.function.Function;
 @FXMLController
 public class NodebookController implements Initializable {
     private final String SEPARATOR = "--------------------------------------------------------------------------------";
-    private final DataService dataService;
     @FXML
     private TreeView<Page> nodeTreeView;
     @FXML
@@ -57,42 +55,39 @@ public class NodebookController implements Initializable {
     private ColorSelectionPopOver fontBackgroundPopOver;
     private GenericStyledArea<ParStyle, Either<String, LinkedImage>, TextStyle> area = RichtextUtil
             .getStyledTextArea();
+    private Session session;
+    private boolean loading;
 
     @Autowired
-    public NodebookController(DataService dataService) {
-        this.dataService = dataService;
+    public NodebookController() {
     }
 
     @FXML
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.initSession();
         this.initToolBar();
         this.initNodeTree();
         this.initRichText();
         KeyEventUtil.initKeyHandlers(this);
-        this.setDocument(
-                dataService.getContent(
-                        nodeTreeView.getSelectionModel().getSelectedItem().getValue().getId()
-                )
-        );
+        this.setDocument(nodeTreeView.getSelectionModel().getSelectedItem().getValue().getId());
     }
 
-    public void loadDocument(String pageId) {
-        setDocument(dataService.getContent(pageId));
-    }
+    public void setDocument(String pageId) {
 
-    public void setDocument(StyledDocument<ParStyle, Either<String, LinkedImage>, TextStyle> styledDocument) {
+        loading = true;
+        if (area.getUndoManager().isUndoAvailable()) {
+            session.updateContent(session.getCurrentPage(), area.getContent());
+        }
+
         area.selectAll();
-        area.replaceSelection(styledDocument);
+        area.replaceSelection(session.getContent(pageId));
+        area.getUndoManager().forgetHistory();
+        loading = false;
     }
 
     public void saveDocument() {
-        TreeItem<Page> rootItem = nodeTreeView.getRoot();
-        Page rootPage = rootItem.getValue();
-        dataService.saveRootPage(rootPage);
-
-        String id = nodeTreeView.getSelectionModel().getSelectedItem().getValue().getId();
-        this.dataService.saveContent(id, area.getDocument());
+        session.save();
     }
 
     public void addNode() {
@@ -100,6 +95,7 @@ public class NodebookController implements Initializable {
                 nodeTreeView.getSelectionModel().getSelectedItem().getParent(),
                 ControllerUtil.NodeDialogType.ADD_NODE
         );
+        updateSessionRootPage();
     }
 
     public void addSubNode() {
@@ -107,6 +103,7 @@ public class NodebookController implements Initializable {
                 nodeTreeView.getSelectionModel().getSelectedItem(),
                 ControllerUtil.NodeDialogType.ADD_SUBNODE
         );
+        updateSessionRootPage();
     }
 
     public void editNode() {
@@ -121,6 +118,7 @@ public class NodebookController implements Initializable {
                     TreeItem.valueChangedEvent(), treeItem);
             Event.fireEvent(treeItem, event);
         }
+        updateSessionRootPage();
     }
 
     public void deleteNode() {
@@ -130,71 +128,16 @@ public class NodebookController implements Initializable {
         parentTreeItem.getValue().getChildren().remove(treeItem.getValue());
     }
 
+    public void updateSessionRootPage() {
+        session.setRootPage(nodeTreeView.getRoot().getValue());
+    }
+
     public void showFontColorPopOver() {
         fontColorPopOver.show(fontColorButton);
     }
 
     public void showFontBackgroundPopOver() {
         fontBackgroundPopOver.show(fontBackgroundButton);
-    }
-
-    private void initToolBar() {
-        for (List<String> buttonGroup : ControllerUtil.toolBarButtons) {
-            for (String buttonName : buttonGroup) {
-                Button button = ControllerUtil.createButton(
-                        buttonName,
-                        ControllerUtil.getAction(buttonName, this), buttonName);
-
-                if (buttonName.equals("font-color")) {
-                    this.fontColorButton = button;
-                } else if (buttonName.equals("font-highlight")) {
-                    this.fontBackgroundButton = button;
-                }
-
-                toolBar.getItems().add(button);
-            }
-            toolBar.getItems().add(new Separator());
-        }
-
-        this.fontColorPopOver = new ColorSelectionPopOver("Select Font Color");
-        this.fontColorPopOver.setOnAction(evt -> {
-            setFontColor(fontColorPopOver.getSelectedColor());
-        });
-
-        this.fontBackgroundPopOver = new ColorSelectionPopOver("Select Highlight Color");
-        this.fontBackgroundPopOver.setOnAction(evt -> {
-            setBackgroundColor(fontBackgroundPopOver.getSelectedColor());
-        });
-    }
-
-    private void initNodeTree() {
-        nodeTreeView.setRoot(ControllerUtil.createRootTreeItem(dataService.getRootPage()));
-        nodeTreeView.setShowRoot(false);
-        MultipleSelectionModel selectionModel = nodeTreeView.getSelectionModel();
-        selectionModel.select(0);
-        nodeTreeView.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> loadDocument(newValue.getValue().getId())
-        );
-
-        ContextMenu nodeTreeContextMenu = new ContextMenu();
-        MenuItem editMenuItem = new MenuItem("Edit node");
-        editMenuItem.setOnAction(event -> editNode());
-        nodeTreeContextMenu.getItems().add(editMenuItem);
-
-        MenuItem deleteMenuItem = new MenuItem("Delete node");
-        deleteMenuItem.setOnAction(event -> deleteNode());
-        nodeTreeContextMenu.getItems().add(deleteMenuItem);
-
-        nodeTreeView.setContextMenu(nodeTreeContextMenu);
-    }
-
-    private void initRichText() {
-        AnchorPane.setTopAnchor(area, 0.0);
-        AnchorPane.setLeftAnchor(area, 0.0);
-        AnchorPane.setRightAnchor(area, 0.0);
-        AnchorPane.setBottomAnchor(area, 0.0);
-
-        richtextPane.getChildren().add(area);
     }
 
     public void toggleBold() {
@@ -349,5 +292,74 @@ public class NodebookController implements Initializable {
             return styles.mapStyles(style -> TextStyle.builder(style).header(newHeader).build());
         };
         updateStyleInSelection(mixinGetter);
+    }
+
+    private void initToolBar() {
+        for (List<String> buttonGroup : ControllerUtil.toolBarButtons) {
+            for (String buttonName : buttonGroup) {
+                Button button = ControllerUtil.createButton(
+                        buttonName,
+                        ControllerUtil.getAction(buttonName, this), buttonName);
+
+                if (buttonName.equals("font-color")) {
+                    this.fontColorButton = button;
+                } else if (buttonName.equals("font-highlight")) {
+                    this.fontBackgroundButton = button;
+                }
+
+                toolBar.getItems().add(button);
+            }
+            toolBar.getItems().add(new Separator());
+        }
+
+        this.fontColorPopOver = new ColorSelectionPopOver("Select Font Color");
+        this.fontColorPopOver.setOnAction(evt -> {
+            setFontColor(fontColorPopOver.getSelectedColor());
+        });
+
+        this.fontBackgroundPopOver = new ColorSelectionPopOver("Select Highlight Color");
+        this.fontBackgroundPopOver.setOnAction(evt -> {
+            setBackgroundColor(fontBackgroundPopOver.getSelectedColor());
+        });
+    }
+
+    private void initNodeTree() {
+        nodeTreeView.setRoot(ControllerUtil.createRootTreeItem(session.getRootPage()));
+        nodeTreeView.setShowRoot(false);
+        MultipleSelectionModel selectionModel = nodeTreeView.getSelectionModel();
+        selectionModel.select(0);
+        nodeTreeView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> setDocument(newValue.getValue().getId())
+        );
+
+        ContextMenu nodeTreeContextMenu = new ContextMenu();
+        MenuItem editMenuItem = new MenuItem("Edit node");
+        editMenuItem.setOnAction(event -> editNode());
+        nodeTreeContextMenu.getItems().add(editMenuItem);
+
+        MenuItem deleteMenuItem = new MenuItem("Delete node");
+        deleteMenuItem.setOnAction(event -> deleteNode());
+        nodeTreeContextMenu.getItems().add(deleteMenuItem);
+
+        nodeTreeView.setContextMenu(nodeTreeContextMenu);
+    }
+
+    private void initRichText() {
+        AnchorPane.setTopAnchor(area, 0.0);
+        AnchorPane.setLeftAnchor(area, 0.0);
+        AnchorPane.setRightAnchor(area, 0.0);
+        AnchorPane.setBottomAnchor(area, 0.0);
+
+        richtextPane.getChildren().add(area);
+
+        area.richChanges()
+                .filter(change -> !loading)
+                .subscribe(change -> {
+            session.dataChanged();
+        });
+    }
+
+    private void initSession() {
+        this.session = new Session("/home/roman/work/nodebook-data/", "test");
     }
 }
