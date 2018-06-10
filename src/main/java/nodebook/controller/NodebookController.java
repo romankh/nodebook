@@ -69,6 +69,7 @@ public class NodebookController implements Initializable {
         this.initToolBar();
         this.initNodeTree();
         this.initRichText();
+        KeyEventUtil.initKeyHandlers(this);
         this.setDocument(
                 dataService.getContent(
                         nodeTreeView.getSelectionModel().getSelectedItem().getValue().getId()
